@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.streamplayer",
+    "package": "typix-streamplayer",
+    "name": {
+      "zh-CN": "流媒体",
+      "en": "Typix StreamPlayer"
+    },
+    "summary": {
+      "zh-CN": "Emby/Jellyfin 登录、媒体库、服务端转码视频及字幕"
+    },
+    "description": {
+      "zh-CN": "Emby/Jellyfin 登录、媒体库、服务端转码视频及字幕。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "AudioVideo"
+    ],
+    "desktopFile": "typix-streamplayer.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-streamplayer"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-streamplayer",
+      "/usr/share/typix-streamplayer/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-streamplayer_0.1.0-1_arm64.deb",
+    "sha256": "dd611f134d465417d0102974a200ab61fb6378531eb7f4d334911a259588983e"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/streamplayer.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

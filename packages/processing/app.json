@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.processing",
+    "package": "typix-processing",
+    "name": {
+      "zh-CN": "创意绘图",
+      "en": "Typix Processing 2D"
+    },
+    "summary": {
+      "zh-CN": "QuickJS 驱动的 Processing 风格 2D 子集与草图编辑器"
+    },
+    "description": {
+      "zh-CN": "QuickJS 驱动的 Processing 风格 2D 子集与草图编辑器。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Development"
+    ],
+    "desktopFile": "typix-processing.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-processing"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-processing",
+      "/usr/share/typix-processing/shared/NotoSansSC-Regular.ttf",
+      "/usr/share/typix-processing/processing/api.js",
+      "/usr/share/typix-processing/processing/examples/tree.js",
+      "/usr/share/typix-processing/processing/examples/particles.js",
+      "/usr/share/typix-processing/processing/examples/SOURCES.json",
+      "/usr/share/typix-processing/processing/examples/flocking.js",
+      "/usr/share/typix-processing/processing/examples/koch.js",
+      "/usr/share/typix-processing/processing/examples/upstream/README.md",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Fractals and L-Systems/Koch/Koch.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Fractals and L-Systems/Koch/KochFractal.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Fractals and L-Systems/Koch/KochLine.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Fractals and L-Systems/Tree/Tree.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/MultipleParticleSystems/MultipleParticleSystems.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/MultipleParticleSystems/CrazyParticle.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/MultipleParticleSystems/Particle.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/MultipleParticleSystems/ParticleSystem.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/Flocking/Flocking.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/Flocking/Flock.pde",
+      "/usr/share/typix-processing/processing/examples/upstream/Topics/Simulate/Flocking/Boid.pde",
+      "/usr/share/typix-processing/terminal/assets/terminfo.src",
+      "/usr/share/typix-processing/terminal/assets/inputrc",
+      "/usr/share/typix-processing/terminal/assets/JetBrainsMono-OFL.txt",
+      "/usr/share/typix-processing/terminal/assets/shellrc",
+      "/usr/share/typix-processing/terminal/assets/JetBrainsMono-Bold.ttf",
+      "/usr/share/typix-processing/terminal/assets/JetBrainsMono-Regular.ttf",
+      "/usr/share/typix-processing/terminal/assets/terminfo/63/c1max"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-processing_0.1.0-1_arm64.deb",
+    "sha256": "b110fdca6f4d88f480a2891b9fdccf7f37125507586b1617453384cd64a56ccb"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/processing.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

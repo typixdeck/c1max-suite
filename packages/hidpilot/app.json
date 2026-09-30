@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.hidpilot",
+    "package": "typix-hidpilot",
+    "name": {
+      "zh-CN": "USB 键鼠",
+      "en": "Typix HIDPilot"
+    },
+    "summary": {
+      "zh-CN": "在已配置且有权限的 USB HID 节点上发送键鼠输入"
+    },
+    "description": {
+      "zh-CN": "在已配置且有权限的 USB HID 节点上发送键鼠输入。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Utility"
+    ],
+    "desktopFile": "typix-hidpilot.desktop",
+    "runtime": {
+      "kind": "python-script",
+      "path": "/usr/share/typix-hidpilot/hidpilot.py"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-hidpilot",
+      "/usr/share/typix-hidpilot/hidpilot.py"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-hidpilot_0.1.0-1_all.deb",
+    "sha256": "0f9d89a9d3f7f4d2cea784df8f0ccd8019d5ccfbabb30c2e4582162574d12d91"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/hidpilot.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.piano",
+    "package": "typix-piano",
+    "name": {
+      "zh-CN": "钢琴",
+      "en": "Typix Piano"
+    },
+    "summary": {
+      "zh-CN": "键盘和触控复音钢琴与正常桌面音频输出"
+    },
+    "description": {
+      "zh-CN": "键盘和触控复音钢琴与正常桌面音频输出。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "AudioVideo"
+    ],
+    "desktopFile": "typix-piano.desktop",
+    "runtime": {
+      "kind": "python-script",
+      "path": "/usr/share/typix-piano/piano.py"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-piano",
+      "/usr/share/typix-piano/piano.py"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-piano_0.1.0-1_all.deb",
+    "sha256": "d82957aa9c3febf7beb894a94d9a962c95feb4095290762a42838d43a7e79150"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/piano.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

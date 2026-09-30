@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.calendar",
+    "package": "typix-calendar",
+    "name": {
+      "zh-CN": "日历",
+      "en": "Typix Calendar"
+    },
+    "summary": {
+      "zh-CN": "月历、本地日程、ICS 导入导出与订阅"
+    },
+    "description": {
+      "zh-CN": "月历、本地日程、ICS 导入导出与订阅。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Office"
+    ],
+    "desktopFile": "typix-calendar.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-calendar"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-calendar",
+      "/usr/share/typix-calendar/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-calendar_0.1.0-1_arm64.deb",
+    "sha256": "cb8f2bc6054d21554ffc390fc9ef177fe31202a60a6666624b5a9e7d3a16b9ab"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/calendar.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

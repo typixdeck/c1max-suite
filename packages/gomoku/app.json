@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.gomoku",
+    "package": "typix-gomoku",
+    "name": {
+      "zh-CN": "五子棋",
+      "en": "Typix Gomoku"
+    },
+    "summary": {
+      "zh-CN": "人机与双人五子棋、悔棋和自动续局"
+    },
+    "description": {
+      "zh-CN": "人机与双人五子棋、悔棋和自动续局。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Game"
+    ],
+    "desktopFile": "typix-gomoku.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-gomoku"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-gomoku",
+      "/usr/share/typix-gomoku/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-gomoku_0.1.0-1_arm64.deb",
+    "sha256": "ab1ef1ea12370489841fbfaa4988822585ae1caddc54434657815e746054acfe"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/gomoku.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

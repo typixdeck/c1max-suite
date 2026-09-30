@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.airtune",
+    "package": "typix-airtune",
+    "name": {
+      "zh-CN": "网络电台",
+      "en": "Typix Airtune"
+    },
+    "summary": {
+      "zh-CN": "电台目录、搜索、收藏、自定义电台与本地列表"
+    },
+    "description": {
+      "zh-CN": "电台目录、搜索、收藏、自定义电台与本地列表。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "AudioVideo"
+    ],
+    "desktopFile": "typix-airtune.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-airtune"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-airtune",
+      "/usr/share/typix-airtune/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-airtune_0.1.0-1_arm64.deb",
+    "sha256": "4ecd37b58213a84f7cf77b04bc6a0316df71eb3b9e2a041bb33b30e99ae2e111"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/airtune.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

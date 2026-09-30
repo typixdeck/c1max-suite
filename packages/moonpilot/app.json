@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.moonpilot",
+    "package": "typix-moonpilot",
+    "name": {
+      "zh-CN": "远程桌面 AI",
+      "en": "Typix MoonPilot"
+    },
+    "summary": {
+      "zh-CN": "Sunshine 配对、远程桌面、手动输入与可配置 AI 和语音"
+    },
+    "description": {
+      "zh-CN": "Sunshine 配对、远程桌面、手动输入与可配置 AI 和语音。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Network"
+    ],
+    "desktopFile": "typix-moonpilot.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-moonpilot"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-moonpilot",
+      "/usr/share/typix-moonpilot/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-moonpilot_0.1.0-1_arm64.deb",
+    "sha256": "2ae1caf6d055b6c2308821334291317e206cd5d5e5866af872c705f3fca36672"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/moonpilot.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

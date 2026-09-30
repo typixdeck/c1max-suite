@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.camera",
+    "package": "typix-camera",
+    "name": {
+      "zh-CN": "拍立得",
+      "en": "Typix Camera"
+    },
+    "summary": {
+      "zh-CN": "V4L2 取景、画幅滤镜、相纸边框与本地相册"
+    },
+    "description": {
+      "zh-CN": "V4L2 取景、画幅滤镜、相纸边框与本地相册。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Graphics"
+    ],
+    "desktopFile": "typix-camera.desktop",
+    "runtime": {
+      "kind": "python-script",
+      "path": "/usr/share/typix-camera/camera.py"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-camera",
+      "/usr/share/typix-camera/camera.py",
+      "/usr/share/typix-camera/assets/shutter.wav",
+      "/usr/share/typix-camera/assets/frame-prompts.json",
+      "/usr/share/typix-camera/assets/frames/film.window",
+      "/usr/share/typix-camera/assets/frames/white.png",
+      "/usr/share/typix-camera/assets/frames/film.png",
+      "/usr/share/typix-camera/assets/frames/white.window",
+      "/usr/share/typix-camera/assets/frames/cream.window",
+      "/usr/share/typix-camera/assets/frames/cream.png"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-camera_0.1.0-1_all.deb",
+    "sha256": "4c18841269bbceb8462712190f01227e5c2ad900ef47cbe5975e2396a9758a2d"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/camera.png",
+      "caption": "CM4 独立 800×600 合成相机测试画面"
+    }
+  ]
+}

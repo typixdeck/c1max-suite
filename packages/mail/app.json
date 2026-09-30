@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.mail",
+    "package": "typix-mail",
+    "name": {
+      "zh-CN": "邮件",
+      "en": "Typix Mail"
+    },
+    "summary": {
+      "zh-CN": "POP3 收件与 SMTP TLS 纯文本邮件客户端"
+    },
+    "description": {
+      "zh-CN": "POP3 收件与 SMTP TLS 纯文本邮件客户端。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Network"
+    ],
+    "desktopFile": "typix-mail.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-mail"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-mail",
+      "/usr/share/typix-mail/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-mail_0.1.0-1_arm64.deb",
+    "sha256": "6d1dd314a0812ebb429c24bb2495aa5ddd31741eb4c2a5f60c5c1bb15685f633"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/mail.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

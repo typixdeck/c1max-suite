@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "source": "upstream/catalog.json",
+  "target": "official-raspios-arm64",
+  "applications": [
+    {
+      "sourceId": "launcher",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "ef41c57c5a8f8821fd8d9a3b138c64f89ccd7275b91d069a614596ffdf336ba2",
+      "disposition": "existing-equivalent",
+      "applicationId": "ai.typixdeck.launcher",
+      "package": "typix-launcher",
+      "sourcePath": "../launcher"
+    },
+    {
+      "sourceId": "piano",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "baa0628b292945b09b5a9b6c5e0c0c01368dae89e8423387e0bbcf320c473c9b",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.piano",
+      "package": "typix-piano",
+      "exportRoot": "packages/piano"
+    },
+    {
+      "sourceId": "nes",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "79064bf46fea692d32c8e22f02a1d81f7e3cebd1d2bf870ae50269985ef7a966",
+      "disposition": "existing-equivalent",
+      "applicationId": "ai.typixdeck.gamer",
+      "package": "typix-gamer",
+      "sourcePath": "../gamer",
+      "runtimeDependencies": [
+        "retroarch",
+        "libretro-nestopia"
+      ],
+      "note": "Gamer NES mapping is present. User ROM required; no duplicate frontend."
+    },
+    {
+      "sourceId": "streamplayer",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "c1f7f6cd9a7b22d4818222f0e7ac41f8dcffad0faf9bf05330bc9649f46a24ed",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.streamplayer",
+      "package": "typix-streamplayer",
+      "exportRoot": "packages/streamplayer"
+    },
+    {
+      "sourceId": "calendar",
+      "sourceVersion": "0.3.0",
+      "sourceRevision": "82591c8bd0f8b4ef286b8b911b51721a6e0400e01dda529d41a52bfb6f777cb5",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.calendar",
+      "package": "typix-calendar",
+      "exportRoot": "packages/calendar"
+    },
+    {
+      "sourceId": "calculator",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "4b8a13d2ff9604d216712357457a36ac3d685b8c8407120b1f61ac9938455ed1",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.calculator",
+      "package": "typix-calculator",
+      "exportRoot": "packages/calculator"
+    },
+    {
+      "sourceId": "terminal",
+      "sourceVersion": "0.1.0",
+      "sourceRevision": "c708ef780f938711c8e367f95809c770f953a45f566b608d16cc3d3172fa85cc",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.terminal",
+      "package": "typix-terminal",
+      "exportRoot": "packages/terminal"
+    },
+    {
+      "sourceId": "gomoku",
+      "sourceVersion": "0.1.0",
+      "sourceRevision": "ed77310c33dcd8c317295145543de25990d23ad7639428f3439b96f67f1d6e2a",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.gomoku",
+      "package": "typix-gomoku",
+      "exportRoot": "packages/gomoku"
+    },
+    {
+      "sourceId": "pcsx4all",
+      "sourceVersion": "0.1.1",
+      "sourceRevision": "6cfe7bd806eb34b6831af018a6f9009e37194432e6f3bdcdaeaee515b321a02f",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.ps1",
+      "package": "typix-ps1",
+      "exportRoot": "packages/ps1"
+    },
+    {
+      "sourceId": "processing",
+      "sourceVersion": "0.1.0",
+      "sourceRevision": "5f855e699d9ed24116c126eb3829dc6306ccf6867189d278868816f1bf94bc7d",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.processing",
+      "package": "typix-processing",
+      "exportRoot": "packages/processing"
+    },
+    {
+      "sourceId": "dosbox",
+      "sourceVersion": "0.1.2",
+      "sourceRevision": "b911ceb030bd1af64af7476f3a129c45829099df21ed9673cbfe5d9928fc9a71",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.dosbox",
+      "package": "typix-dosbox",
+      "exportRoot": "packages/dosbox"
+    },
+    {
+      "sourceId": "airtune",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "db7ecc7d82265a453f918a9bdc832f9d52bf515e6ec34affda5a738c233365b8",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.airtune",
+      "package": "typix-airtune",
+      "exportRoot": "packages/airtune"
+    },
+    {
+      "sourceId": "crosspoint",
+      "sourceVersion": "0.3.1",
+      "sourceRevision": "8143ca525dfb7d144821b40549f4da5e2b929b5b38293bece757b9ccf05e5538",
+      "disposition": "existing-equivalent",
+      "applicationId": "ai.typixdeck.reader",
+      "package": "typix-reader",
+      "sourcePath": "../reader"
+    },
+    {
+      "sourceId": "camera",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "0dfb3011cded4c6c034809d9bcc48f89f2d9d460bdde128c19f2c41a8a4e786f",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.camera",
+      "package": "typix-camera",
+      "exportRoot": "packages/camera"
+    },
+    {
+      "sourceId": "mail",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "5dcca6270998130d57397a5019c059af5fec860891423ffa171cf6c644408aa4",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.mail",
+      "package": "typix-mail",
+      "exportRoot": "packages/mail"
+    },
+    {
+      "sourceId": "bilibili",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "ed278516452fd3bd3b4a5d0161550ffefae3d1491ad905db384e01670a72c82b",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.bilibili",
+      "package": "typix-bilibili",
+      "exportRoot": "packages/bilibili"
+    },
+    {
+      "sourceId": "hidpilot",
+      "sourceVersion": "0.2.0",
+      "sourceRevision": "800ce0c4db3cc43c5b1cca682ea4dfe20264a8ff08c9a9c7c47087077776962b",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.hidpilot",
+      "package": "typix-hidpilot",
+      "exportRoot": "packages/hidpilot"
+    },
+    {
+      "sourceId": "moonpilot",
+      "sourceVersion": "0.1.0",
+      "sourceRevision": "0419bece2552844e4742d42a2ef8960d62b89c3b3efe74a581b7858bfffdd4bc",
+      "disposition": "complete-deb",
+      "applicationId": "ai.typixdeck.moonpilot",
+      "package": "typix-moonpilot",
+      "exportRoot": "packages/moonpilot"
+    }
+  ]
+}

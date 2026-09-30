@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.dosbox",
+    "package": "typix-dosbox",
+    "name": {
+      "zh-CN": "DOS 游戏库",
+      "en": "Typix DOSBox"
+    },
+    "summary": {
+      "zh-CN": "本地 DOS 游戏目录、完整 DOSBox 运行与会话管理"
+    },
+    "description": {
+      "zh-CN": "本地 DOS 游戏目录、完整 DOSBox 运行与会话管理。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Game"
+    ],
+    "desktopFile": "typix-dosbox.desktop",
+    "runtime": {
+      "kind": "python-script",
+      "path": "/usr/share/typix-dosbox/game_library.py"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-dosbox",
+      "/usr/share/typix-dosbox/game_library.py"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 256,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-dosbox_0.1.0-1_all.deb",
+    "sha256": "8708f7756a4dea7d7e58a125b4268af5e598cae67615ced8e4e1a4aac010eae6"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/dosbox.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

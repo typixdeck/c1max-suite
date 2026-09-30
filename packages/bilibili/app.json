@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.bilibili",
+    "package": "typix-bilibili",
+    "name": {
+      "zh-CN": "哔哩哔哩",
+      "en": "Typix Bilibili"
+    },
+    "summary": {
+      "zh-CN": "热门、搜索、BV、分 P、扫码登录与直连 MP4"
+    },
+    "description": {
+      "zh-CN": "热门、搜索、BV、分 P、扫码登录与直连 MP4。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "AudioVideo"
+    ],
+    "desktopFile": "typix-bilibili.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-bilibili"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-bilibili",
+      "/usr/share/typix-bilibili/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-bilibili_0.1.0-1_arm64.deb",
+    "sha256": "ce1853bc71447a6d6d8db5ac3abd153a55643d896da795d7c7321f95f06e9c77"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/bilibili.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

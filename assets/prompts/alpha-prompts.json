@@ -1,0 +1,28 @@
+{
+  "tool": "image_gen.imagegen",
+  "mode": "built-in edit",
+  "prompt": "Use case: background-extraction. Edit target: supplied existing application icon. Remove the entire navy-blue background, ground plane, ambient backdrop and external cast shadow; make all exterior space genuinely transparent using the PNG alpha channel. Keep the central sculpted icon object, its exact silhouette, interior materials, colors, highlights, perspective and centered composition unchanged. Preserve soft antialiased object edges. Return a square RGBA PNG with real alpha transparency, with approximately 12 percent transparent margin. No replacement color background, no checkerboard baked into pixels, no new background plaque, no text, no watermark. This will be composited over several UI background colors at 88x88 pixels.",
+  "icons": {
+    "streamplayer": {
+      "path": "icons/streamplayer.png"
+    },
+    "calendar": {
+      "path": "icons/calendar.png"
+    },
+    "calculator": {
+      "path": "icons/calculator.png"
+    },
+    "piano": {
+      "path": "icons/piano.png"
+    },
+    "nes": {
+      "path": "icons/nes.png"
+    },
+    "updates": {
+      "path": "icons/updates.png"
+    },
+    "terminal": {
+      "path": "icons/terminal.png"
+    }
+  }
+}

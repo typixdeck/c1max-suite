@@ -1,0 +1,1 @@
+Icons are the original generated public C1Max launcher artwork, reused for the matching TypixDeck ports. PS1 uses the original PCSX4all icon. No private/local application artwork is included. Original generation prompts are retained under prompts/.

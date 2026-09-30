@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.calculator",
+    "package": "typix-calculator",
+    "name": {
+      "zh-CN": "计算器",
+      "en": "Typix Calculator"
+    },
+    "summary": {
+      "zh-CN": "四则、括号、乘方、历史与实体键盘计算"
+    },
+    "description": {
+      "zh-CN": "四则、括号、乘方、历史与实体键盘计算。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "Utility"
+    ],
+    "desktopFile": "typix-calculator.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-calculator"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-calculator",
+      "/usr/share/typix-calculator/shared/NotoSansSC-Regular.ttf"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-calculator_0.1.0-1_arm64.deb",
+    "sha256": "d91db4a6af389d8c0883b2c7ffe602ba1aa40488d91a1bf656e6c2282dbef18f"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/calculator.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}

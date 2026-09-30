@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "repository": "typixdeck/c1max-suite",
+  "distribution": "complete-deb",
+  "application": {
+    "id": "ai.typixdeck.terminal",
+    "package": "typix-terminal",
+    "name": {
+      "zh-CN": "终端",
+      "en": "Typix Terminal"
+    },
+    "summary": {
+      "zh-CN": "完整 PTY、ANSI、UTF-8 终端和 Linux 命令工具"
+    },
+    "description": {
+      "zh-CN": "完整 PTY、ANSI、UTF-8 终端和 Linux 命令工具。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。"
+    },
+    "categories": [
+      "System"
+    ],
+    "desktopFile": "typix-terminal.desktop",
+    "runtime": {
+      "kind": "native",
+      "path": "/usr/bin/typix-terminal"
+    },
+    "requiredPayload": [
+      "/usr/bin/typix-terminal",
+      "/usr/share/typix-terminal/shared/NotoSansSC-Regular.ttf",
+      "/usr/share/typix-terminal/terminal/assets/terminfo.src",
+      "/usr/share/typix-terminal/terminal/assets/inputrc",
+      "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-OFL.txt",
+      "/usr/share/typix-terminal/terminal/assets/shellrc",
+      "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-Bold.ttf",
+      "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-Regular.ttf",
+      "/usr/share/typix-terminal/terminal/assets/terminfo/63/c1max"
+    ],
+    "compatibility": {
+      "arch": [
+        "arm64"
+      ],
+      "minMemoryMB": 128,
+      "minFreeDiskMB": 64,
+      "display": [
+        "wayland",
+        "x11"
+      ],
+      "requiredFeatures": []
+    }
+  },
+  "release": {
+    "version": "0.1.0-1",
+    "file": "dist/typix-terminal_0.1.0-1_arm64.deb",
+    "sha256": "1e8ad980d8682cd206180ea7e94bbce1aba958753c84f636f30174732176f0fa"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/terminal.png",
+      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+    }
+  ]
+}
