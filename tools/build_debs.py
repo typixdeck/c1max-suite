@@ -41,7 +41,7 @@ DEFAULT_APPS = [name for name in APPS if name != 'camera']
 
 
 def screenshot_metadata(name, version):
-    native = f'docs/screenshots/{name}-0.2.0-arm64.png'
+    native = f'docs/screenshots/{name}-0-2-0-arm64.png'
     if name in NATIVE and version == '0.2.0-1' and (ROOT / native).is_file():
         return [{'path': native, 'caption': '0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务'}]
     responsive = f'docs/screenshots/{name}-responsive-800x600.png'

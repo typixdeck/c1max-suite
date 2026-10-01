@@ -69,11 +69,11 @@
   "release": {
     "version": "0.2.0-1",
     "file": "dist/typix-processing_0.2.0-1_arm64.deb",
-    "sha256": "07adf5f0d88eda8c467de72cb81c5912bdc8ea1a9623f33005e8a169881d649f"
+    "sha256": "8e89b6d583714a7024c4b8f1d555b7aff8f866a516e278799f0f4b8a933c9a9b"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/processing-0.2.0-arm64.png",
+      "path": "docs/screenshots/processing-0-2-0-arm64.png",
       "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]

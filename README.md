@@ -10,11 +10,11 @@ The 0.2.0 source adapts application widgets to the available TypixDeck window, r
 
 These screenshots show the **actual rebuilt 0.2.0 ARM64 debs**, extracted and launched in an isolated Debian Trixie ARM64 GTK/Xvfb environment at 800×600. Network access was disabled and user state was temporary. All ten native applications started, rendered and exited successfully. This is not physical CM4 touch, audio or external-service acceptance. Additional actual LVGL source renders cover 1024×768 and 1280×800 content viewports. See [checks and limits](docs/RESPONSIVE-UI.md).
 
-![Calculator: 0.2.0 ARM64 GTK UI at 800×600](docs/screenshots/calculator-0.2.0-arm64.png)
+![Calculator: 0.2.0 ARM64 GTK UI at 800×600](docs/screenshots/calculator-0-2-0-arm64.png)
 
-![Calendar: 0.2.0 ARM64 GTK UI at 800×600](docs/screenshots/calendar-0.2.0-arm64.png)
+![Calendar: 0.2.0 ARM64 GTK UI at 800×600](docs/screenshots/calendar-0-2-0-arm64.png)
 
-![Mail: 0.2.0 ARM64 GTK UI with no account configured](docs/screenshots/mail-0.2.0-arm64.png)
+![Mail: 0.2.0 ARM64 GTK UI with no account configured](docs/screenshots/mail-0-2-0-arm64.png)
 
 ## Build
 
@@ -64,16 +64,16 @@ HID requires already-configured writable keyboard/mouse gadget nodes and correct
 
 | Application | Source / package descriptor | UI evidence |
 | --- | --- | --- |
-| 计算器 / Calculator | [packages/calculator](packages/calculator/app.json) | [0.2 ARM64 GTK](docs/screenshots/calculator-0.2.0-arm64.png) |
-| 日历 / Calendar | [packages/calendar](packages/calendar/app.json) | [0.2 ARM64 GTK](docs/screenshots/calendar-0.2.0-arm64.png) |
-| 五子棋 / Gomoku | [packages/gomoku](packages/gomoku/app.json) | [0.2 ARM64 GTK](docs/screenshots/gomoku-0.2.0-arm64.png) |
-| 终端 / Terminal | [packages/terminal](packages/terminal/app.json) | [0.2 ARM64 GTK](docs/screenshots/terminal-0.2.0-arm64.png) |
-| 创意绘图 / Processing 2D | [packages/processing](packages/processing/app.json) | [0.2 ARM64 GTK](docs/screenshots/processing-0.2.0-arm64.png) |
-| 网络电台 / Airtune | [packages/airtune](packages/airtune/app.json) | [0.2 ARM64 GTK](docs/screenshots/airtune-0.2.0-arm64.png) |
-| 流媒体 / StreamPlayer | [packages/streamplayer](packages/streamplayer/app.json) | [0.2 ARM64 GTK](docs/screenshots/streamplayer-0.2.0-arm64.png) |
-| 哔哩哔哩 / Bilibili | [packages/bilibili](packages/bilibili/app.json) | [0.2 ARM64 GTK](docs/screenshots/bilibili-0.2.0-arm64.png) |
-| 邮件 / Mail | [packages/mail](packages/mail/app.json) | [0.2 ARM64 GTK](docs/screenshots/mail-0.2.0-arm64.png) |
-| 远程桌面 AI / MoonPilot | [packages/moonpilot](packages/moonpilot/app.json) | [0.2 ARM64 GTK](docs/screenshots/moonpilot-0.2.0-arm64.png) |
+| 计算器 / Calculator | [packages/calculator](packages/calculator/app.json) | [0.2 ARM64 GTK](docs/screenshots/calculator-0-2-0-arm64.png) |
+| 日历 / Calendar | [packages/calendar](packages/calendar/app.json) | [0.2 ARM64 GTK](docs/screenshots/calendar-0-2-0-arm64.png) |
+| 五子棋 / Gomoku | [packages/gomoku](packages/gomoku/app.json) | [0.2 ARM64 GTK](docs/screenshots/gomoku-0-2-0-arm64.png) |
+| 终端 / Terminal | [packages/terminal](packages/terminal/app.json) | [0.2 ARM64 GTK](docs/screenshots/terminal-0-2-0-arm64.png) |
+| 创意绘图 / Processing 2D | [packages/processing](packages/processing/app.json) | [0.2 ARM64 GTK](docs/screenshots/processing-0-2-0-arm64.png) |
+| 网络电台 / Airtune | [packages/airtune](packages/airtune/app.json) | [0.2 ARM64 GTK](docs/screenshots/airtune-0-2-0-arm64.png) |
+| 流媒体 / StreamPlayer | [packages/streamplayer](packages/streamplayer/app.json) | [0.2 ARM64 GTK](docs/screenshots/streamplayer-0-2-0-arm64.png) |
+| 哔哩哔哩 / Bilibili | [packages/bilibili](packages/bilibili/app.json) | [0.2 ARM64 GTK](docs/screenshots/bilibili-0-2-0-arm64.png) |
+| 邮件 / Mail | [packages/mail](packages/mail/app.json) | [0.2 ARM64 GTK](docs/screenshots/mail-0-2-0-arm64.png) |
+| 远程桌面 AI / MoonPilot | [packages/moonpilot](packages/moonpilot/app.json) | [0.2 ARM64 GTK](docs/screenshots/moonpilot-0-2-0-arm64.png) |
 | 钢琴 / Piano | [packages/piano](packages/piano/app.json) | [0.1 CM4 reference](docs/screenshots/piano.png) |
 | 拍立得 / Camera | [packages/camera](packages/camera/app.json) | [0.1 CM4 reference](docs/screenshots/camera.png) |
 | USB 键鼠 / HIDPilot | [packages/hidpilot](packages/hidpilot/app.json) | [0.1 CM4 reference](docs/screenshots/hidpilot.png) |

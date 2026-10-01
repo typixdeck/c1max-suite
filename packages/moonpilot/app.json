@@ -44,11 +44,11 @@
   "release": {
     "version": "0.2.0-1",
     "file": "dist/typix-moonpilot_0.2.0-1_arm64.deb",
-    "sha256": "e6e736820e03e675596f8a71b721a5efe3fc6111d9560ac231234bc1195bfd9d"
+    "sha256": "eacb74e51fa64478a33e6f7ed8747104e277ee38652ad9ac9473c36db66ef5ee"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/moonpilot-0.2.0-arm64.png",
+      "path": "docs/screenshots/moonpilot-0-2-0-arm64.png",
       "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]

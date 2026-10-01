@@ -69,17 +69,17 @@ with `dpkg-shlibdeps`, and included the actual fonts, resources and licenses.
 Camera source, descriptor, screenshot and 0.1.0 deb remain unchanged.
 
 Ten extracted 0.2.0 debs started and rendered in a task-owned 800×600 Xvfb.
-Each process exited with code 0 and Xvfb was closed. Their `*-0.2.0-arm64.png`
+Each process exited with code 0 and Xvfb was closed. Their `*-0-2-0-arm64.png`
 screenshots contain the production GTK header and application UI. All state was
 temporary, and the test container had no external network access.
 
 | Actual ARM64 GTK screenshot | Actual ARM64 GTK screenshot |
 |---|---|
-| [Calculator](screenshots/calculator-0.2.0-arm64.png) | [Calendar](screenshots/calendar-0.2.0-arm64.png) |
-| [Gomoku](screenshots/gomoku-0.2.0-arm64.png) | [Terminal](screenshots/terminal-0.2.0-arm64.png) |
-| [Processing](screenshots/processing-0.2.0-arm64.png) | [Airtune](screenshots/airtune-0.2.0-arm64.png) |
-| [StreamPlayer](screenshots/streamplayer-0.2.0-arm64.png) | [Bilibili](screenshots/bilibili-0.2.0-arm64.png) |
-| [Mail](screenshots/mail-0.2.0-arm64.png) | [MoonPilot](screenshots/moonpilot-0.2.0-arm64.png) |
+| [Calculator](screenshots/calculator-0-2-0-arm64.png) | [Calendar](screenshots/calendar-0-2-0-arm64.png) |
+| [Gomoku](screenshots/gomoku-0-2-0-arm64.png) | [Terminal](screenshots/terminal-0-2-0-arm64.png) |
+| [Processing](screenshots/processing-0-2-0-arm64.png) | [Airtune](screenshots/airtune-0-2-0-arm64.png) |
+| [StreamPlayer](screenshots/streamplayer-0-2-0-arm64.png) | [Bilibili](screenshots/bilibili-0-2-0-arm64.png) |
+| [Mail](screenshots/mail-0-2-0-arm64.png) | [MoonPilot](screenshots/moonpilot-0-2-0-arm64.png) |
 
 The same ARM64 build passed production GTK Escape and header Back signals for
 Processing, Airtune and StreamPlayer, including request cancellation, late-result
@@ -94,7 +94,7 @@ Reproduce after the native build:
 ```sh
 docker run --rm --platform linux/arm64 --network none -e TYPIX_XVFB=/usr/bin/Xvfb \
   -v "$PWD:/work" typix-c1max-builder:trixie-arm64 sh -c \
-  'build/c1max-sketch-test upstream/processing && python3 tests/test_escape.py && python3 tests/test_first_run.py && python3 tools/smoke_suite.py --apps calculator calendar gomoku terminal processing airtune streamplayer bilibili mail moonpilot --suffix=-0.2.0-arm64'
+  'build/c1max-sketch-test upstream/processing && python3 tests/test_escape.py && python3 tests/test_first_run.py && python3 tools/smoke_suite.py --apps calculator calendar gomoku terminal processing airtune streamplayer bilibili mail moonpilot --suffix=-0-2-0-arm64'
 ```
 
 Re-run `tools/build_debs.py` after capturing screenshots to include the accurate

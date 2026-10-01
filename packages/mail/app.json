@@ -44,11 +44,11 @@
   "release": {
     "version": "0.2.0-1",
     "file": "dist/typix-mail_0.2.0-1_arm64.deb",
-    "sha256": "92bfc888f7e06822de5b831a856ad7614371e812383a36bceb90e2b42c2198a3"
+    "sha256": "2ba3f7187f7a0979cc3223f20c0b5acfd7ca733c220bb8c07b4dd08b5fd37cbf"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/mail-0.2.0-arm64.png",
+      "path": "docs/screenshots/mail-0-2-0-arm64.png",
       "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]

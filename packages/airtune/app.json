@@ -44,11 +44,11 @@
   "release": {
     "version": "0.2.0-1",
     "file": "dist/typix-airtune_0.2.0-1_arm64.deb",
-    "sha256": "b007cb94d086fcbce89073c3f84a0b58d8ba775bd1c1c19fd3208de993fa07e0"
+    "sha256": "0609d8bdd5be7e89758118407f8b6aa3653e25921508896224a535389921f266"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/airtune-0.2.0-arm64.png",
+      "path": "docs/screenshots/airtune-0-2-0-arm64.png",
       "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]
