@@ -4,7 +4,7 @@
 namespace screen {
 bool open();
 void close();
-// Playback may reflow LVGL to 340x800; the default remains 800x340.
+// Playback changes the layout basis; desktop content keeps its actual aspect.
 void portrait(bool enabled);
 extern bool quit;
 extern bool playing;

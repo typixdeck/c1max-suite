@@ -3,6 +3,7 @@
 #include "pty.hpp"
 #include "input.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
 #include <algorithm>
 #include <csignal>
@@ -18,11 +19,12 @@
 
 namespace {
 int rows = 14, cols = 80, cell_width = 10, cell_height = 22,font_size=16;
-constexpr int body_height = 308;
+int body_height = 568;
 terminal::Pty *shell_pty=nullptr;
 std::string font_root;
 uint32_t last_resize=0;
 void resize_font(int delta);
+void resize_window();
 struct FontShortcuts {
     FontShortcuts(){int fd=open("/tmp/c1max-terminal-font.pid",O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC|O_NOFOLLOW,0600);if(fd>=0){dprintf(fd,"%ld\n",(long)getpid());close(fd);}}
     ~FontShortcuts(){unlink("/tmp/c1max-terminal-font.pid");}
@@ -93,8 +95,8 @@ void draw(lv_event_t *event) {
 }
 void set_status(const std::string &shell_state = {}) {
     std::string text;
-    if (!persistent_error.empty()) text = persistent_error + "  |  Power: home";
-    else if (!shell_state.empty()) text = shell_state + "  |  Power: home";
+    if (!persistent_error.empty()) text = persistent_error + "  |  F10: close";
+    else if (!shell_state.empty()) text = shell_state + "  |  F10: close";
     else {
         text = caps ? "CAPS  " : "abc   ";
         text += input.hint();
@@ -132,14 +134,25 @@ void resize_font(int delta){
     auto *next_bold=font_file(font_root+"/terminal/assets/JetBrainsMono-Bold.ttf",size,96);
     auto *next_cjk=font_file(font_root+"/shared/NotoSansSC-Regular.ttf",size,96);
     if(!next){if(next_bold)lv_tiny_ttf_destroy(next_bold);if(next_cjk)lv_tiny_ttf_destroy(next_cjk);return;}
-    int cw=(size*3+4)/5,ch=size+6,new_rows=body_height/ch,new_cols=800/cw;
-    if(!shell_pty->resize(new_rows,new_cols)){for(auto*f:{next,next_bold,next_cjk})if(f)lv_tiny_ttf_destroy(f);return;}
+    int cw=(size*3+4)/5,ch=size+6,new_rows=body_height/ch,new_cols=screen::layout_width()/cw;
+    if(!shell_pty->resize(new_rows,new_cols,screen::layout_width(),body_height)){for(auto*f:{next,next_bold,next_cjk})if(f)lv_tiny_ttf_destroy(f);return;}
     if(regular)regular->fallback=nullptr;if(bold)bold->fallback=nullptr;
     for(auto*f:{regular,bold,cjk})if(f)lv_tiny_ttf_destroy(f);
     regular=next;bold=next_bold;cjk=next_cjk;regular->fallback=cjk;if(bold)bold->fallback=cjk;
     font_size=size;cell_width=cw;cell_height=ch;rows=new_rows;cols=new_cols;
     model->resize(rows,cols);last_resize=now;lv_obj_invalidate(canvas);
     std::fprintf(stderr,"[terminal] font=%d grid=%dx%d\n",font_size,cols,rows);
+}
+void resize_window(){
+    body_height=std::max(80,screen::layout_height()-32);
+    int next_rows=std::clamp(body_height/cell_height,1,200),next_cols=std::clamp(screen::layout_width()/cell_width,1,400);
+    if(model){
+        bool accepted=!shell_pty||shell_pty->pid()<=0||shell_pty->resize(next_rows,next_cols,screen::layout_width(),body_height);
+        if(accepted && (next_rows!=rows || next_cols!=cols)){rows=next_rows;cols=next_cols;model->resize(rows,cols);}
+        else if(!accepted) persistent_error=shell_pty->error();
+    }
+    if(canvas){lv_obj_set_size(canvas,screen::layout_width(),body_height);lv_obj_invalidate(canvas);}
+    if(status){lv_obj_set_pos(status,0,body_height);lv_obj_set_size(status,screen::layout_width(),32);}
 }
 void release_fonts() {
     if (regular) regular->fallback = nullptr;
@@ -187,6 +200,7 @@ int main() {
         lv_obj_set_style_text_font(status, small, 0);
         lv_obj_set_style_pad_left(status, 4, 0); lv_obj_set_style_pad_top(status, 6, 0);
         lv_label_set_long_mode(status, LV_LABEL_LONG_CLIP);
+        screen::layout_on_resize(resize_window);resize_window();
         caps = screen::caps_lock();
         std::string shell = environment("C1_TERMINAL_SHELL", "");
         if (shell.empty()) {
@@ -211,8 +225,8 @@ int main() {
             argv.push_back("--noprofile"); argv.push_back("--rcfile"); argv.push_back(assets + "shellrc");
         }
         argv.push_back("-i");
-        term.feed("\x1b[36mC1Max Terminal\x1b[0m  |  Symbol + C: interrupt\r\n");
-        if (!pty.start(argv, rows, cols, home, env)) persistent_error = pty.error();
+        term.feed("\x1b[36mTypix Terminal\x1b[0m  |  Ctrl+C: interrupt\r\n");
+        if (!pty.start(argv, rows, cols, home, env,screen::layout_width(),body_height)) persistent_error = pty.error();
         std::string shell_state;
         bool finished = false;
         while (!screen::quit && !interrupted) {

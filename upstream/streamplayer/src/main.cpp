@@ -9,6 +9,7 @@
 #include "frame_watchdog.hpp"
 #include <sys/stat.h>
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
 #include <atomic>
 #include <future>
@@ -90,16 +91,16 @@ static int last_volume=-1,unmute_volume=50;
 static volatile sig_atomic_t interrupted=0;
 static void sig(int){interrupted=1;}
 static uint64_t received_frames(){return video_reader.frames();}
-static lv_obj_t* label(lv_obj_t*p,const std::string&s,int x,int y,int w){auto o=lv_label_create(p);lv_label_set_text(o,s.c_str());lv_obj_set_pos(o,x,y);lv_obj_set_width(o,w);lv_label_set_long_mode(o,LV_LABEL_LONG_WRAP);return o;}
-static lv_obj_t* button(lv_obj_t*p,const std::string&s,int x,int y,int w,lv_event_cb_t cb,void*arg=nullptr){auto o=lv_button_create(p);physical_buttons.push_back(o);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_bg_color(o,lv_color_hex(0x101b25),0);lv_obj_set_style_text_color(o,lv_color_hex(0xffffff),0);lv_obj_set_style_border_width(o,0,0);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,40);auto l=lv_label_create(o);lv_label_set_text(l,s.c_str());lv_obj_set_width(l,w-16);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);lv_obj_set_style_text_align(l,LV_TEXT_ALIGN_CENTER,0);lv_obj_center(l);lv_obj_set_style_radius(o,8,0);lv_obj_set_style_border_width(o,1,0);lv_obj_set_style_border_color(o,lv_color_hex(0x243440),0);lv_obj_add_event_cb(o,cb,LV_EVENT_CLICKED,arg);return o;}
+static lv_obj_t* label(lv_obj_t*p,const std::string&s,int x,int y,int w){auto o=lv_label_create(p);lv_label_set_text(o,s.c_str());screen::place(o,x,y);screen::set_width(o,w);lv_label_set_long_mode(o,LV_LABEL_LONG_WRAP);return o;}
+static lv_obj_t* button(lv_obj_t*p,const std::string&s,int x,int y,int w,lv_event_cb_t cb,void*arg=nullptr){auto o=lv_button_create(p);physical_buttons.push_back(o);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_bg_color(o,lv_color_hex(0x101b25),0);lv_obj_set_style_text_color(o,lv_color_hex(0xffffff),0);lv_obj_set_style_border_width(o,0,0);screen::place(o,x,y);screen::size(o,w,40);auto l=lv_label_create(o);lv_label_set_text(l,s.c_str());screen::set_width(l,w-16);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);lv_obj_set_style_text_align(l,LV_TEXT_ALIGN_CENTER,0);lv_obj_center(l);lv_obj_set_style_radius(o,8,0);lv_obj_set_style_border_width(o,1,0);lv_obj_set_style_border_color(o,lv_color_hex(0x243440),0);lv_obj_add_event_cb(o,cb,LV_EVENT_CLICKED,arg);return o;}
 static void status(const std::string&s){if(status_label)lv_label_set_text(status_label,s.c_str());}
 static void screen_base(const std::string &heading){
     active_field=nullptr;physical_buttons.clear();physical_index=0;browse_area=nullptr;
     auto s=lv_screen_active();lv_obj_clean(s);lv_obj_remove_flag(s,LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_bg_color(s,lv_color_hex(0x04070b),0);lv_obj_set_style_text_color(s,lv_color_hex(0xeaf1f8),0);if(font)lv_obj_set_style_text_font(s,font,0);
-    auto dot=lv_obj_create(s);lv_obj_remove_style_all(dot);lv_obj_set_pos(dot,18,18);lv_obj_set_size(dot,12,12);lv_obj_set_style_radius(dot,6,0);lv_obj_set_style_bg_color(dot,accent(),0);lv_obj_set_style_bg_opa(dot,LV_OPA_COVER,0);
+    auto dot=lv_obj_create(s);lv_obj_remove_style_all(dot);screen::place(dot,18,18);screen::size(dot,12,12);lv_obj_set_style_radius(dot,6,0);lv_obj_set_style_bg_color(dot,accent(),0);lv_obj_set_style_bg_opa(dot,LV_OPA_COVER,0);
     auto h=label(s,heading,42,8,735);lv_label_set_long_mode(h,LV_LABEL_LONG_DOT);if(large_font)lv_obj_set_style_text_font(h,large_font,0);
-    content=lv_obj_create(s);lv_obj_set_pos(content,10,46);lv_obj_set_size(content,780,252);lv_obj_set_style_bg_color(content,lv_color_hex(0x080e14),0);lv_obj_set_style_bg_opa(content,LV_OPA_COVER,0);lv_obj_set_style_text_color(content,lv_color_hex(0xeaf1f8),0);lv_obj_set_style_border_width(content,1,0);lv_obj_set_style_border_color(content,lv_color_hex(0x172431),0);lv_obj_set_style_radius(content,12,0);lv_obj_set_style_pad_all(content,0,0);
+    content=lv_obj_create(s);screen::place(content,10,46);screen::size(content,780,252);lv_obj_set_style_bg_color(content,lv_color_hex(0x080e14),0);lv_obj_set_style_bg_opa(content,LV_OPA_COVER,0);lv_obj_set_style_text_color(content,lv_color_hex(0xeaf1f8),0);lv_obj_set_style_border_width(content,1,0);lv_obj_set_style_border_color(content,lv_color_hex(0x172431),0);lv_obj_set_style_radius(content,12,0);lv_obj_set_style_pad_all(content,0,0);
     status_label=label(s,"",18,308,764);if(small_font)lv_obj_set_style_text_font(status_label,small_font,0);lv_obj_set_style_text_color(status_label,lv_color_hex(0x8b98a8),0);lv_label_set_long_mode(status_label,LV_LABEL_LONG_DOT);
 }
 static void work(const std::string&message,std::function<Json()>run,std::function<void(Json)>done){if(busy)return;request_cancelled=false;c1::reset_requests();busy=true;status(message);if(content)lv_obj_add_state(content,LV_STATE_DISABLED);completed=std::move(done);job=std::async(std::launch::async,[run]{try{return Json{{"ok",true},{"result",run()}};}catch(std::exception&e){return Json{{"ok",false},{"error",e.what()}};}});}
@@ -109,19 +110,19 @@ static void seek_by(int);static void seek_to(int64_t);static void toggle_fit();
 static void volume_change(int);static void toggle_mute();
 static lv_obj_t* field(const char*placeholder,const std::string&value,int y,bool secret=false){
     auto o=lv_textarea_create(content);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_bg_color(o,lv_color_hex(0x0a1119),0);lv_obj_set_style_text_color(o,lv_color_hex(0xffffff),0);
-    lv_obj_set_pos(o,8,y);lv_obj_set_size(o,500,42);lv_obj_set_style_border_width(o,1,0);lv_obj_set_style_border_color(o,lv_color_hex(0x243440),0);lv_obj_set_style_border_color(o,accent(),LV_STATE_FOCUSED);lv_obj_set_style_radius(o,7,0);lv_textarea_set_one_line(o,true);lv_textarea_set_placeholder_text(o,placeholder);lv_textarea_set_text(o,value.c_str());lv_textarea_set_password_mode(o,secret);
+    screen::place(o,8,y);screen::size(o,500,42);lv_obj_set_style_border_width(o,1,0);lv_obj_set_style_border_color(o,lv_color_hex(0x243440),0);lv_obj_set_style_border_color(o,accent(),LV_STATE_FOCUSED);lv_obj_set_style_radius(o,7,0);lv_textarea_set_one_line(o,true);lv_textarea_set_placeholder_text(o,placeholder);lv_textarea_set_text(o,value.c_str());lv_textarea_set_password_mode(o,secret);
     lv_obj_add_event_cb(o,[](lv_event_t*e){if(!busy){auto target=(lv_obj_t*)lv_event_get_target(e);if(active_field&&active_field!=target)lv_obj_remove_state(active_field,LV_STATE_FOCUSED);active_field=target;lv_obj_add_state(active_field,LV_STATE_FOCUSED);status(screen::caps_lock()?"ABC | Double Shift: abc | Shift: symbols | Enter: next":"abc | Double Shift: ABC | Shift: symbols | Enter: next");}},LV_EVENT_CLICKED,nullptr);return o;
 }
 void show_setup(){
     view=View::Setup;screen_base("StreamPlayer");
     label(content,"Server",20,16,80);
-    kind=lv_dropdown_create(content);lv_obj_set_pos(kind,105,8);lv_obj_set_size(kind,235,40);lv_dropdown_set_options(kind,"Emby\nJellyfin");lv_dropdown_set_selected(kind,client.config.value("type",std::string())=="Jellyfin"?1:0);
+    kind=lv_dropdown_create(content);screen::place(kind,105,8);screen::size(kind,235,40);lv_dropdown_set_options(kind,"Emby\nJellyfin");lv_dropdown_set_selected(kind,client.config.value("type",std::string())=="Jellyfin"?1:0);
     lv_obj_set_style_bg_color(kind,lv_color_hex(0x0a1119),0);lv_obj_set_style_text_color(kind,lv_color_hex(0xeaf1f8),0);lv_obj_set_style_border_color(kind,lv_color_hex(0x243440),0);
     label(content,"Jellyfin · Emby",536,16,220);
-    auto line=lv_obj_create(content);lv_obj_remove_style_all(line);lv_obj_set_pos(line,20,56);lv_obj_set_size(line,738,2);lv_obj_set_style_bg_color(line,accent(),0);lv_obj_set_style_bg_opa(line,LV_OPA_COVER,0);
-    label(content,"URL",20,78,68);server=field("http://server:8096",client.config.value("base",std::string()),68);lv_obj_set_pos(server,90,68);lv_obj_set_width(server,668);
-    label(content,"User",20,131,68);username=field("Username",client.config.value("username",std::string()),122);lv_obj_set_pos(username,90,122);lv_obj_set_width(username,278);
-    label(content,"Pass",390,131,68);password=field("Password",client.config.value("password",std::string()),122,true);lv_obj_set_pos(password,460,122);lv_obj_set_width(password,298);
+    auto line=lv_obj_create(content);lv_obj_remove_style_all(line);screen::place(line,20,56);screen::size(line,738,2);lv_obj_set_style_bg_color(line,accent(),0);lv_obj_set_style_bg_opa(line,LV_OPA_COVER,0);
+    label(content,"URL",20,78,68);server=field("http://server:8096",client.config.value("base",std::string()),68);screen::place(server,90,68);screen::set_width(server,668);
+    label(content,"User",20,131,68);username=field("Username",client.config.value("username",std::string()),122);screen::place(username,90,122);screen::set_width(username,278);
+    label(content,"Pass",390,131,68);password=field("Password",client.config.value("password",std::string()),122,true);screen::place(password,460,122);screen::set_width(password,298);
     auto login=button(content,"Login",20,188,345,[](lv_event_t*){
         if(busy)return;std::string b=lv_textarea_get_text(server),u=lv_textarea_get_text(username),p=lv_textarea_get_text(password),t=lv_dropdown_get_selected(kind)?"Jellyfin":"Emby";
         lv_textarea_set_text(password,"");active_field=nullptr;
@@ -138,17 +139,17 @@ static void render_items(){
     view=View::Items;screen_base("StreamPlayer / "+(libraries.empty()?std::string("Videos"):libraries[library_index].value("Name",std::string("Videos"))));
     for(size_t i=0;i<libraries.size();++i){
         auto b=button(content,libraries[i].value("Name",std::string("Library")),10,8+int(i)*38,120,[](lv_event_t*e){if(busy)return;library_index=(size_t)lv_event_get_user_data(e);parent_id=libraries[library_index].at("Id");page=0;show_items();},(void*)i);
-        lv_obj_set_height(b,34);if(i==library_index){lv_obj_set_style_border_color(b,accent(),0);lv_obj_set_style_text_color(b,accent(),0);}
+        screen::set_height(b,34);if(i==library_index){lv_obj_set_style_border_color(b,accent(),0);lv_obj_set_style_text_color(b,accent(),0);}
     }
     physical_buttons.clear();physical_index=0;
-    browse_area=lv_obj_create(content);lv_obj_remove_style_all(browse_area);lv_obj_set_pos(browse_area,144,6);lv_obj_set_size(browse_area,622,238);lv_obj_remove_flag(browse_area,LV_OBJ_FLAG_SCROLLABLE);
+    browse_area=lv_obj_create(content);lv_obj_remove_style_all(browse_area);screen::place(browse_area,144,6);screen::size(browse_area,622,238);lv_obj_remove_flag(browse_area,LV_OBJ_FLAG_SCROLLABLE);
     for(size_t i=0;i<rows.size();++i){
         auto card=button(browse_area,"",int(i)*208,0,198,[](lv_event_t*e){item_index=(size_t)lv_event_get_user_data(e);show_detail();},(void*)i);
-        lv_obj_set_height(card,196);lv_obj_set_style_pad_all(card,0,0);lv_obj_set_style_bg_color(card,lv_color_hex(0x0a1119),0);if(i==item_index)lv_obj_set_style_border_color(card,accent(),0);
+        screen::set_height(card,196);lv_obj_set_style_pad_all(card,0,0);lv_obj_set_style_bg_color(card,lv_color_hex(0x0a1119),0);if(i==item_index)lv_obj_set_style_border_color(card,accent(),0);
         auto placeholder=label(card,LV_SYMBOL_VIDEO,12,57,170);lv_obj_set_style_text_align(placeholder,LV_TEXT_ALIGN_CENTER,0);lv_obj_set_style_text_color(placeholder,accent(),0);
         auto path=rows[i].value("Poster",std::string());if(!path.empty()){
-            auto image=lv_image_create(card);lv_image_set_src(image,("A:"+path).c_str());lv_obj_set_pos(image,28,4);
-            lv_obj_set_size(image,140,140);lv_image_set_inner_align(image,LV_IMAGE_ALIGN_CONTAIN);
+            auto image=lv_image_create(card);lv_image_set_src(image,("A:"+path).c_str());screen::place(image,28,4);
+            screen::size(image,140,140);lv_image_set_inner_align(image,LV_IMAGE_ALIGN_CONTAIN);
         }
         auto name=label(card,rows[i].value("Name",std::string("Video")),10,146,176);lv_label_set_long_mode(name,LV_LABEL_LONG_DOT);
         std::string meta=rows[i].contains("ProductionYear")?std::to_string(rows[i]["ProductionYear"].get<int>()):rows[i].value("SeriesName",std::string());
@@ -170,9 +171,9 @@ static void show_items(){
 static void show_detail(){
     if(busy||item_index>=rows.size())return;view=View::Detail;auto item=rows[item_index];
     title=item.value("Name",std::string("Video"));screen_base("StreamPlayer / "+title);
-    auto path=item.value("Poster",std::string());if(!path.empty()){auto im=lv_image_create(content);lv_image_set_src(im,("A:"+path).c_str());lv_obj_set_pos(im,14,12);lv_obj_set_size(im,140,194);lv_image_set_inner_align(im,LV_IMAGE_ALIGN_CONTAIN);}
+    auto path=item.value("Poster",std::string());if(!path.empty()){auto im=lv_image_create(content);lv_image_set_src(im,("A:"+path).c_str());screen::place(im,14,12);screen::size(im,140,194);lv_image_set_inner_align(im,LV_IMAGE_ALIGN_CONTAIN);}
     auto heading=label(content,title,176,10,576);if(large_font)lv_obj_set_style_text_font(heading,large_font,0);lv_label_set_long_mode(heading,LV_LABEL_LONG_DOT);
-    auto overview=label(content,item.value("Overview",std::string("")),176,50,576);lv_obj_set_height(overview,112);if(small_font)lv_obj_set_style_text_font(overview,small_font,0);lv_label_set_long_mode(overview,LV_LABEL_LONG_DOT);lv_obj_set_style_text_color(overview,lv_color_hex(0xa6b5c4),0);
+    auto overview=label(content,item.value("Overview",std::string("")),176,50,576);screen::set_height(overview,112);if(small_font)lv_obj_set_style_text_font(overview,small_font,0);lv_label_set_long_mode(overview,LV_LABEL_LONG_DOT);lv_obj_set_style_text_color(overview,lv_color_hex(0xa6b5c4),0);
     auto play=button(content,"Play",176,190,272,[](lv_event_t*){
         if(busy)return;auto id=rows[item_index].at("Id").get<std::string>();auto next=std::make_shared<Playback>();auto old=current;bool dirty=server_session_dirty;auto options=requested_options;options.subtitle=-1;
         work("Preparing playback...",[id,next,old,dirty,options]{if(dirty)client.stop_transcode(old);*next=client.playback(id,0,options);return Json::object();},[next](Json){current=*next;server_session_dirty=true;pause_on_start=false;start_player(current);});
@@ -196,7 +197,7 @@ static void controls(bool visible){
     screen::video_controls(visible,subtitle_panel!=nullptr);if(visible){lv_obj_invalidate(video_top);lv_obj_invalidate(video_bar);}
 }
 static lv_obj_t* video_button(lv_obj_t*parent,const char*text,int x,int y,int width,lv_event_cb_t callback,void*arg=nullptr){
-    auto o=lv_button_create(parent);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,width,40);
+    auto o=lv_button_create(parent);screen::place(o,x,y);screen::size(o,width,40);
     lv_obj_set_style_bg_color(o,lv_color_hex(0x101b25),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);
     lv_obj_set_style_pad_all(o,0,0);lv_obj_set_style_border_width(o,0,0);lv_obj_set_style_radius(o,5,0);
     auto l=lv_label_create(o);lv_label_set_text(l,text);lv_obj_center(l);
@@ -206,14 +207,14 @@ static lv_obj_t* video_button(lv_obj_t*parent,const char*text,int x,int y,int wi
 static void create_controls(){
     if(video_root)return;
     video_root=lv_obj_create(lv_screen_active());lv_obj_remove_style_all(video_root);
-    lv_obj_set_size(video_root,800,340);lv_obj_set_pos(video_root,0,0);
+    screen::size(video_root,800,340);screen::place(video_root,0,0);
     lv_obj_remove_flag(video_root,LV_OBJ_FLAG_SCROLLABLE);lv_obj_add_flag(video_root,LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(video_root,[](lv_event_t*){controls(!controls_visible);},LV_EVENT_CLICKED,nullptr);
-    auto panel=[](lv_obj_t*parent,int y,int height){auto p=lv_obj_create(parent);lv_obj_remove_style_all(p);lv_obj_set_pos(p,0,y);lv_obj_set_size(p,800,height);lv_obj_set_style_bg_color(p,lv_color_hex(0x080e14),0);lv_obj_set_style_bg_opa(p,LV_OPA_COVER,0);lv_obj_remove_flag(p,LV_OBJ_FLAG_SCROLLABLE);return p;};
+    auto panel=[](lv_obj_t*parent,int y,int height){auto p=lv_obj_create(parent);lv_obj_remove_style_all(p);screen::place(p,0,y);screen::size(p,800,height);lv_obj_set_style_bg_color(p,lv_color_hex(0x080e14),0);lv_obj_set_style_bg_opa(p,LV_OPA_COVER,0);lv_obj_remove_flag(p,LV_OBJ_FLAG_SCROLLABLE);return p;};
     video_top=panel(video_root,0,36);video_bar=panel(video_root,218,122);
     auto t=label(video_top,title,12,4,674);lv_label_set_long_mode(t,LV_LABEL_LONG_DOT);
-    auto hide=video_button(video_top,"Hide",704,0,88,[](lv_event_t*){controls(false);});lv_obj_set_height(lv_obj_get_parent(hide),34);
-    progress=lv_slider_create(video_bar);lv_obj_set_pos(progress,24,18);lv_obj_set_size(progress,752,12);
+    auto hide=video_button(video_top,"Hide",704,0,88,[](lv_event_t*){controls(false);});screen::set_height(lv_obj_get_parent(hide),34);
+    progress=lv_slider_create(video_bar);screen::place(progress,24,18);screen::size(progress,752,12);
     lv_slider_set_range(progress,0,1000);lv_obj_set_ext_click_area(progress,12);
     lv_obj_set_style_bg_color(progress,lv_color_hex(0x344963),LV_PART_MAIN);
     lv_obj_set_style_bg_color(progress,accent(),LV_PART_INDICATOR);
@@ -265,11 +266,11 @@ static void select_subtitle(int index){
 }
 static void show_subtitles(){
     if(!video_root)return;if(subtitle_panel){close_subtitles();return;}
-    subtitle_panel=lv_obj_create(video_root);lv_obj_set_pos(subtitle_panel,0,0);lv_obj_set_size(subtitle_panel,800,340);
+    subtitle_panel=lv_obj_create(video_root);screen::place(subtitle_panel,0,0);screen::size(subtitle_panel,800,340);
     lv_obj_set_style_text_color(subtitle_panel,lv_color_hex(0xeaf1f8),0);lv_obj_set_style_bg_color(subtitle_panel,lv_color_hex(0x080e14),0);lv_obj_set_style_bg_opa(subtitle_panel,LV_OPA_COVER,0);lv_obj_set_style_pad_all(subtitle_panel,0,0);lv_obj_set_style_border_width(subtitle_panel,0,0);
     label(subtitle_panel,"Subtitles / 字幕",20,10,650);
     auto hint=label(subtitle_panel,subtitle_error.empty()?"Local subtitles · same size in Width / Fit":subtitle_error,20,44,570);
-    if(small_font)lv_obj_set_style_text_font(hint,small_font,0);lv_obj_set_height(hint,32);
+    if(small_font)lv_obj_set_style_text_font(hint,small_font,0);screen::set_height(hint,32);
     auto size_change=[](lv_event_t*e){
         int delta=(int)(intptr_t)lv_event_get_user_data(e);subtitle_size=std::clamp(subtitle_size+delta,24,40);
         if(subtitle_font){lv_tiny_ttf_destroy(subtitle_font);subtitle_font=nullptr;}
@@ -277,12 +278,12 @@ static void show_subtitles(){
     };
     video_button(subtitle_panel,"A−",600,34,78,size_change,(void*)(intptr_t)-4);
     video_button(subtitle_panel,"A+",688,34,78,size_change,(void*)(intptr_t)4);
-    auto list=lv_obj_create(subtitle_panel);lv_obj_set_pos(list,12,80);lv_obj_set_size(list,776,216);lv_obj_set_style_bg_opa(list,LV_OPA_TRANSP,0);lv_obj_set_style_border_width(list,0,0);lv_obj_set_style_pad_all(list,0,0);
+    auto list=lv_obj_create(subtitle_panel);screen::place(list,12,80);screen::size(list,776,216);lv_obj_set_style_bg_opa(list,LV_OPA_TRANSP,0);lv_obj_set_style_border_width(list,0,0);lv_obj_set_style_pad_all(list,0,0);
     subtitle_buttons.clear();subtitle_index=0;
     auto add=[&](const std::string&text,int index){
         auto l=video_button(list,text.c_str(),6,int(subtitle_buttons.size())*46,750,[](lv_event_t*e){select_subtitle((int)(intptr_t)lv_event_get_user_data(e)-1);},(void*)(intptr_t)(index+1));
         auto b=lv_obj_get_parent(l);
-        lv_obj_set_width(l,718);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);lv_obj_center(l);
+        screen::set_width(l,718);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);lv_obj_center(l);
         if(index==subtitle_track){subtitle_index=subtitle_buttons.size();lv_obj_set_style_border_width(b,2,0);lv_obj_set_style_border_color(b,accent(),0);}
         subtitle_buttons.push_back(b);
     };

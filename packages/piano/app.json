@@ -19,6 +19,7 @@
       "AudioVideo"
     ],
     "desktopFile": "typix-piano.desktop",
+    "icon": "typix-piano",
     "runtime": {
       "kind": "python-script",
       "path": "/usr/share/typix-piano/piano.py"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-piano_0.1.0-1_all.deb",
-    "sha256": "d82957aa9c3febf7beb894a94d9a962c95feb4095290762a42838d43a7e79150"
+    "version": "0.2.0-1",
+    "file": "dist/typix-piano_0.2.0-1_all.deb",
+    "sha256": "21fad55d4b1f86851e96a0254d8ca6e487d0dd6153f08fc32ba3ee31e8ba2709"
   },
   "screenshots": [
     {
       "path": "docs/screenshots/piano.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "caption": "0.1.0 CM4 隔离显示中的界面参考；未验证本次候选版本"
     }
   ]
 }

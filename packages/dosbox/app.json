@@ -19,6 +19,7 @@
       "Game"
     ],
     "desktopFile": "typix-dosbox.desktop",
+    "icon": "typix-dosbox",
     "runtime": {
       "kind": "python-script",
       "path": "/usr/share/typix-dosbox/game_library.py"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-dosbox_0.1.0-1_all.deb",
-    "sha256": "8708f7756a4dea7d7e58a125b4268af5e598cae67615ced8e4e1a4aac010eae6"
+    "version": "0.2.0-1",
+    "file": "dist/typix-dosbox_0.2.0-1_all.deb",
+    "sha256": "3a62f1045f66dae0ec4a23318e9a37244b40753fded98b2be9eba0daeb732274"
   },
   "screenshots": [
     {
       "path": "docs/screenshots/dosbox.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "caption": "0.1.0 CM4 隔离显示中的界面参考；未验证本次候选版本"
     }
   ]
 }

@@ -31,6 +31,13 @@ void exited(Pty &pty) {
 int main() {
     {
         Pty pty;
+        assert(pty.start({"/usr/bin/python3","-c","import fcntl,termios,struct; size=lambda:struct.unpack('HHHH',fcntl.ioctl(0,termios.TIOCGWINSZ,b'\\0'*8)); print(size(),flush=True); input(); print(size(),flush=True)"},
+                         25,80,"/",{},800,550));
+        until(pty,"(25, 80, 800, 550)");assert(pty.resize(25,80,800,560));assert(pty.send("\n"));
+        until(pty,"(25, 80, 800, 560)");exited(pty);
+    }
+    {
+        Pty pty;
         assert(pty.start({"/bin/sh", "-c", "stty -echo; stty size; printf READY; IFS= read -r value; printf '[%s]' \"$value\""},
                          14, 80, "/", {"LC_ALL=C"}));
         auto output = until(pty, "READY");

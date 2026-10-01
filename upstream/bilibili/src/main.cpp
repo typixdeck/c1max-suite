@@ -3,6 +3,7 @@
 #include "api.hpp"
 #include "player.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "lv_tiny_ttf.h"
 #include <algorithm>
 #include <atomic>
@@ -32,15 +33,15 @@ void paint();void load_list();void start_video();void open_detail(int index,bool
 std::string path(const char*name){return c1::data()+"/bilibili/"+name;}
 std::string clock_text(int seconds){char b[32];std::snprintf(b,sizeof b,"%d:%02d",std::max(0,seconds)/60,std::max(0,seconds)%60);return b;}
 void message(const std::string&s){status=s;if(footer)lv_label_set_text(footer,s.c_str());}
-lv_obj_t*box(lv_obj_t*p,int x,int y,int w,int h,uint32_t color=surface,int radius=10){auto*o=lv_obj_create(p);lv_obj_remove_style_all(o);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,h);lv_obj_remove_flag(o,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_style_bg_color(o,lv_color_hex(color),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_radius(o,radius,0);return o;}
-lv_obj_t*text(lv_obj_t*p,const std::string&s,int x,int y,int w,int h=26,uint32_t color=ink,lv_font_t*f=nullptr){auto*o=lv_label_create(p);lv_label_set_text(o,s.c_str());lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,h);lv_label_set_long_mode(o,LV_LABEL_LONG_DOT);lv_obj_set_style_text_color(o,lv_color_hex(color),0);if(f)lv_obj_set_style_text_font(o,f,0);return o;}
+lv_obj_t*box(lv_obj_t*p,int x,int y,int w,int h,uint32_t color=surface,int radius=10){auto*o=lv_obj_create(p);lv_obj_remove_style_all(o);screen::place(o,x,y);screen::size(o,w,h);lv_obj_remove_flag(o,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_style_bg_color(o,lv_color_hex(color),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_radius(o,radius,0);return o;}
+lv_obj_t*text(lv_obj_t*p,const std::string&s,int x,int y,int w,int h=26,uint32_t color=ink,lv_font_t*f=nullptr){auto*o=lv_label_create(p);lv_label_set_text(o,s.c_str());screen::place(o,x,y);screen::size(o,w,h);lv_label_set_long_mode(o,LV_LABEL_LONG_DOT);lv_obj_set_style_text_color(o,lv_color_hex(color),0);if(f)lv_obj_set_style_text_font(o,f,0);return o;}
 lv_obj_t*button(lv_obj_t*p,const std::string&s,int x,int y,int w,int h,std::function<void()>fn,bool primary=false){auto*o=box(p,x,y,w,h,primary?pink:surface,8);lv_obj_add_flag(o,LV_OBJ_FLAG_CLICKABLE);lv_obj_set_style_bg_color(o,lv_color_hex(0xa34666),LV_STATE_PRESSED);actions.push_back(std::move(fn));lv_obj_add_event_cb(o,[](lv_event_t*e){auto fn=*static_cast<std::function<void()>*>(lv_event_get_user_data(e));fn();},LV_EVENT_CLICKED,&actions.back());auto*l=text(o,s,8,(h-24)/2,w-16,24,primary?0x14121b:ink);lv_obj_set_style_text_align(l,LV_TEXT_ALIGN_CENTER,0);return o;}
 void work(const std::string&msg,std::function<Json()>run,std::function<void(Json)>done){if(busy)return;c1::reset_requests();busy=true;cancelled=false;message(msg);complete=std::move(done);job=std::async(std::launch::async,[run]{try{return Json{{"ok",true},{"data",run()}};}catch(const std::exception&e){return Json{{"ok",false},{"error",e.what()}};}});}
 void save_store(){try{c1::save_private(path("library.json"),store.dump(2));}catch(const std::exception&e){message(e.what());}}
 void remember(const char*kind,const Json&v){auto row=bili::summary(v);auto&list=store[kind];for(auto it=list.begin();it!=list.end();)if(it->value("bvid","")==row["bvid"])it=list.erase(it);else ++it;list.insert(list.begin(),row);while(list.size()>100)list.erase(list.end()-1);save_store();}
 bool saved(){if(!detail.is_object())return false;for(auto&v:store["saved"])if(v.value("bvid","")==detail.value("bvid",""))return true;return false;}
 void toggle_saved(){if(busy)return;if(saved()){auto&list=store["saved"];for(auto it=list.begin();it!=list.end();)if(it->value("bvid","")==detail.value("bvid",""))it=list.erase(it);else ++it;save_store();message("已从本机收藏删除");}else{remember("saved",detail);message("已加入本机收藏");}paint();}
-void photo(lv_obj_t*p,const Json&v,int x,int y){box(p,x,y,192,108,0x272238,7);text(p,LV_SYMBOL_PLAY,x+72,y+34,48,35,pink,large);auto file=v.value("poster",std::string());if(!file.empty()){auto*im=lv_image_create(p);lv_image_set_src(im,("A:"+file).c_str());lv_obj_set_pos(im,x,y);lv_obj_set_size(im,192,108);lv_image_set_inner_align(im,LV_IMAGE_ALIGN_CONTAIN);}}
+void photo(lv_obj_t*p,const Json&v,int x,int y){box(p,x,y,192,108,0x272238,7);text(p,LV_SYMBOL_PLAY,x+72,y+34,48,35,pink,large);auto file=v.value("poster",std::string());if(!file.empty()){auto*im=lv_image_create(p);lv_image_set_src(im,("A:"+file).c_str());screen::place(im,x,y);screen::size(im,192,108);lv_image_set_inner_align(im,LV_IMAGE_ALIGN_CONTAIN);}}
 void base(){auto*r=lv_screen_active();lv_obj_clean(r);actions.clear();field=nullptr;footer=nullptr;lv_obj_remove_flag(r,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_style_bg_color(r,lv_color_hex(bg),0);lv_obj_set_style_bg_opa(r,LV_OPA_COVER,0);lv_obj_set_style_text_color(r,lv_color_hex(ink),0);if(font)lv_obj_set_style_text_font(r,font,0);
     text(r,"bilibili",18,10,128,34,pink,large);text(r,"C1 / VIDEO",150,17,205,24,muted,small);button(r,account_name+" · 账号",607,4,176,44,[]{if(!busy)navigate(Page::Account);},page==Page::Account);
     static const char*names[]={"热门","竖屏","搜索","本机收藏","观看记录"};for(int i=0;i<5;i++){auto*b=button(r,names[i],12,58+i*49,122,44,[i]{if(!busy)navigate(Page(i));},page==Page(i));(void)b;}
@@ -50,7 +51,7 @@ void paint(){if(playing)return;base();auto*r=lv_screen_active();
     if(page==Page::Account){
         text(r,"扫码登录",164,59,315,34,ink,large);
         if(!qr_url.empty()){
-            auto*q=lv_qrcode_create(r);lv_qrcode_set_size(q,208);lv_qrcode_set_dark_color(q,lv_color_hex(0x111111));lv_qrcode_set_light_color(q,lv_color_hex(0xffffff));lv_obj_set_pos(q,169,96);lv_obj_set_style_border_width(q,10,0);lv_obj_set_style_border_color(q,lv_color_hex(0xffffff),0);lv_qrcode_update(q,qr_url.data(),qr_url.size());
+            auto*q=lv_qrcode_create(r);lv_qrcode_set_size(q,208);lv_qrcode_set_dark_color(q,lv_color_hex(0x111111));lv_qrcode_set_light_color(q,lv_color_hex(0xffffff));screen::place(q,169,96);lv_obj_set_style_border_width(q,10,0);lv_obj_set_style_border_color(q,lv_color_hex(0xffffff),0);lv_qrcode_update(q,qr_url.data(),qr_url.size());
             text(r,"打开手机哔哩哔哩\n扫描左侧二维码\n并在手机上确认登录",418,105,344,100,ink);button(r,"刷新二维码",421,244,156,44,[]{if(!busy)make_qr();});
         }else{
             text(r,account_name=="游客"?"游客可以浏览和播放公开视频。\n登录信息仅保存在这台设备上。":"当前账号："+account_name+"\n收藏和观看记录仍保存在本机。",166,112,590,92,muted);
@@ -66,7 +67,7 @@ void paint(){if(playing)return;base();auto*r=lv_screen_active();
     }
     int top=61;
     if(page==Page::Search){
-        field=lv_textarea_create(r);lv_obj_set_pos(field,152,54);lv_obj_set_size(field,479,43);lv_textarea_set_one_line(field,true);lv_textarea_set_max_length(field,160);lv_textarea_set_placeholder_text(field,"关键词 / BV 号 / 视频链接");lv_textarea_set_text(field,query.c_str());lv_obj_set_style_bg_color(field,lv_color_hex(surface),0);lv_obj_set_style_bg_opa(field,LV_OPA_COVER,0);lv_obj_set_style_text_color(field,lv_color_hex(ink),0);lv_obj_set_style_border_color(field,lv_color_hex(line),0);lv_obj_set_style_border_color(field,lv_color_hex(pink),LV_STATE_FOCUSED);lv_obj_set_style_border_width(field,1,0);lv_obj_set_style_pad_all(field,8,0);
+        field=lv_textarea_create(r);screen::place(field,152,54);screen::size(field,479,43);lv_textarea_set_one_line(field,true);lv_textarea_set_max_length(field,160);lv_textarea_set_placeholder_text(field,"关键词 / BV 号 / 视频链接");lv_textarea_set_text(field,query.c_str());lv_obj_set_style_bg_color(field,lv_color_hex(surface),0);lv_obj_set_style_bg_opa(field,LV_OPA_COVER,0);lv_obj_set_style_text_color(field,lv_color_hex(ink),0);lv_obj_set_style_border_color(field,lv_color_hex(line),0);lv_obj_set_style_border_color(field,lv_color_hex(pink),LV_STATE_FOCUSED);lv_obj_set_style_border_width(field,1,0);lv_obj_set_style_pad_all(field,8,0);
         lv_obj_add_event_cb(field,[](lv_event_t*){if(!busy)lv_obj_add_state(field,LV_STATE_FOCUSED);},LV_EVENT_CLICKED,nullptr);
         button(r,"搜索",642,54,141,43,[]{if(busy)return;query=lv_textarea_get_text(field);api_page=1;offset=selected=0;load_list();},true);top=104;
     }else text(r,page==Page::Home?"此刻热门":page==Page::Portrait?"竖屏 · 热门精选":page==Page::Saved?"本机收藏":"最近观看",153,56,376,30,ink,large);
@@ -165,14 +166,14 @@ void video_ui(bool reveal){
     screen::video_controls_area(top,bar_y);
     auto*r=lv_screen_active();lv_obj_clean(r);actions.clear();footer=field=nullptr;dragging=false;
     video_top=video_bar=video_progress=video_time=video_state=video_pause=video_fit=video_loading=nullptr;overlay_mode=-1;
-    auto*hit=lv_obj_create(r);lv_obj_remove_style_all(hit);lv_obj_set_size(hit,w,h);lv_obj_add_flag(hit,LV_OBJ_FLAG_CLICKABLE);lv_obj_add_event_cb(hit,[](lv_event_t*){show_controls(!controls);},LV_EVENT_CLICKED,nullptr);
+    auto*hit=lv_obj_create(r);lv_obj_remove_style_all(hit);screen::size(hit,w,h);lv_obj_add_flag(hit,LV_OBJ_FLAG_CLICKABLE);lv_obj_add_event_cb(hit,[](lv_event_t*){show_controls(!controls);},LV_EVENT_CLICKED,nullptr);
     video_top=box(r,0,0,w,top,bg,0);video_bar=box(r,0,bar_y,w,h-bar_y,bg,0);
     text(video_top,detail.value("title","视频"),12,portrait_mode?8:14,portrait_mode?316:470,portrait_mode?44:26,ink,small);
     auto action=[&](lv_obj_t*parent,const char*label,int x,int y,int width,std::function<void()>fn){return button(parent,label,x,y,width,44,[fn]{controls_at=screen::tick();fn();});};
     auto mute=[]{int v=volume();if(v>0){remembered_volume=v;set_volume(0);}else set_volume(remembered_volume);};
     auto fit=[]{fill=!fill;screen::video_fit(fill);};
     if(!portrait_mode){action(video_top,"P 上个",494,6,90,[]{adjacent_video(-1);});action(video_top,"O 下个",594,6,90,[]{adjacent_video(1);});action(video_top,"L 竖屏",694,6,94,[]{rotate_video();});}
-    video_progress=lv_slider_create(video_bar);lv_obj_set_pos(video_progress,22,14);lv_obj_set_size(video_progress,w-44,12);lv_slider_set_range(video_progress,0,1000);lv_obj_set_ext_click_area(video_progress,12);lv_obj_set_style_bg_color(video_progress,lv_color_hex(pink),LV_PART_INDICATOR);lv_obj_add_event_cb(video_progress,[](lv_event_t*e){auto c=lv_event_get_code(e);if(c==LV_EVENT_PRESSED){dragging=true;controls_at=screen::tick();}if(c==LV_EVENT_RELEASED){dragging=false;controls_at=screen::tick();player.seek(player.duration*lv_slider_get_value(video_progress)/1000.0);}if(c==LV_EVENT_PRESS_LOST)dragging=false;},LV_EVENT_ALL,nullptr);
+    video_progress=lv_slider_create(video_bar);screen::place(video_progress,22,14);screen::size(video_progress,w-44,12);lv_slider_set_range(video_progress,0,1000);lv_obj_set_ext_click_area(video_progress,12);lv_obj_set_style_bg_color(video_progress,lv_color_hex(pink),LV_PART_INDICATOR);lv_obj_add_event_cb(video_progress,[](lv_event_t*e){auto c=lv_event_get_code(e);if(c==LV_EVENT_PRESSED){dragging=true;controls_at=screen::tick();}if(c==LV_EVENT_RELEASED){dragging=false;controls_at=screen::tick();player.seek(player.duration*lv_slider_get_value(video_progress)/1000.0);}if(c==LV_EVENT_PRESS_LOST)dragging=false;},LV_EVENT_ALL,nullptr);
     video_time=text(video_bar,"",18,34,portrait_mode?304:220,25,ink,small);video_state=text(video_bar,"正在连接 / 缓冲…",portrait_mode?18:265,portrait_mode?62:34,portrait_mode?304:515,25,muted,small);
     if(portrait_mode){
         action(video_bar,"P 上个",12,96,98,[]{adjacent_video(-1);});auto*b=action(video_bar,"暂停",121,96,98,[]{player.pause();});video_pause=lv_obj_get_child(b,0);action(video_bar,"O 下个",230,96,98,[]{adjacent_video(1);});

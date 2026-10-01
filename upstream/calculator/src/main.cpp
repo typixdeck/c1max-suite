@@ -1,6 +1,7 @@
 #include "typix_runtime.hpp"
 #include "model.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
 #include <algorithm>
 #include <cerrno>
@@ -59,8 +60,8 @@ lv_obj_t *label(lv_obj_t *parent, const char *text, int x, int y, int width,
                 uint32_t color, const lv_font_t *font = nullptr) {
     auto *obj = lv_label_create(parent);
     lv_label_set_text(obj, text);
-    lv_obj_set_pos(obj, x, y);
-    lv_obj_set_width(obj, width);
+    screen::place(obj, x, y);
+    screen::set_width(obj, width);
     lv_obj_set_style_text_color(obj, lv_color_hex(color), 0);
     if (font) lv_obj_set_style_text_font(obj, font, 0);
     return obj;
@@ -94,8 +95,8 @@ void key(lv_event_t *event) {
 void button(lv_obj_t *parent, const char *text, const char *action,
             int x, int y, int width, int height, uint32_t color) {
     auto *obj = lv_button_create(parent);
-    lv_obj_set_pos(obj, x, y);
-    lv_obj_set_size(obj, width, height);
+    screen::place(obj, x, y);
+    screen::size(obj, width, height);
     lv_obj_set_style_bg_color(obj, lv_color_hex(color), 0);
     lv_obj_set_style_bg_opa(obj, LV_OPA_COVER, 0);
     lv_obj_set_style_bg_color(obj, lv_color_hex(0x507397), LV_STATE_PRESSED);

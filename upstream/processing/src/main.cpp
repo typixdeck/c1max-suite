@@ -1,6 +1,7 @@
 #include "typix_runtime.hpp"
 #include "runtime.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "net.hpp"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
 #include <algorithm>
@@ -24,7 +25,7 @@ int prefix=0;
 uint32_t last_frame=0;
 const char *tr(const char *cn,const char *en){return chinese?cn:en;}
 void library();void run();void edit();void help();void error(const std::string&);
-lv_obj_t *label(const std::string &s,int x,int y,int w,uint32_t c=0xe9eff5){auto *o=lv_label_create(lv_screen_active());lv_label_set_text(o,s.c_str());lv_obj_set_pos(o,x,y);lv_obj_set_width(o,w);lv_obj_set_style_text_color(o,lv_color_hex(c),0);return o;}
+lv_obj_t *label(const std::string &s,int x,int y,int w,uint32_t c=0xe9eff5){auto *o=lv_label_create(lv_screen_active());lv_label_set_text(o,s.c_str());screen::place(o,x,y);screen::set_width(o,w);lv_obj_set_style_text_color(o,lv_color_hex(c),0);return o;}
 void clear(Page p){page=p;canvas=editor=hint=pause_label=nullptr;lv_obj_clean(lv_screen_active());auto *r=lv_screen_active();lv_obj_remove_flag(r,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_style_bg_color(r,lv_color_hex(0x101b2a),0);lv_obj_set_style_text_color(r,lv_color_hex(0xe9eff5),0);if(font)lv_obj_set_style_text_font(r,font,0);}
 bool save(){
     if(editor)source=lv_textarea_get_text(editor);
@@ -49,7 +50,7 @@ void action(int id){
     if(id==9){edit();return;}
     if(id==10){if(save())run();return;}
 }
-lv_obj_t *button(const char *s,int x,int y,int w,int h,int id){auto *o=lv_button_create(lv_screen_active());lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,h);lv_obj_set_style_bg_color(o,lv_color_hex(0x284155),0);lv_obj_set_style_shadow_width(o,0,0);auto *l=lv_label_create(o);lv_label_set_text(l,s);lv_obj_center(l);lv_obj_add_event_cb(o,[](lv_event_t *e){action(int(intptr_t(lv_event_get_user_data(e))));},LV_EVENT_CLICKED,(void*)intptr_t(id));return l;}
+lv_obj_t *button(const char *s,int x,int y,int w,int h,int id){auto *o=lv_button_create(lv_screen_active());screen::place(o,x,y);screen::size(o,w,h);lv_obj_set_style_bg_color(o,lv_color_hex(0x284155),0);lv_obj_set_style_shadow_width(o,0,0);auto *l=lv_label_create(o);lv_label_set_text(l,s);lv_obj_center(l);lv_obj_add_event_cb(o,[](lv_event_t *e){action(int(intptr_t(lv_event_get_user_data(e))));},LV_EVENT_CLICKED,(void*)intptr_t(id));return l;}
 void library(){
     clear(Page::Library);label("Processing 2D",18,12,250);label(tr("轻量 JavaScript 兼容版","Lightweight JavaScript subset"),325,15,456,0x9fb7cd);
     const char *names[]={tr("Q  树形分形","Q  Recursive tree"),tr("W  Koch 曲线","W  Koch curve"),tr("E  群聚模拟","E  Flocking"),tr("R  粒子系统","R  Particle systems"),tr("T  我的程序","T  My sketch"),tr("H  编程帮助","H  Coding help")};
@@ -60,10 +61,10 @@ void run(){
     clear(Page::Run);paused=false;last_frame=0;
     if(!runtime.load(api,source)){error(runtime.error);return;}
     descriptor={};descriptor.header.magic=LV_IMAGE_HEADER_MAGIC;descriptor.header.cf=LV_COLOR_FORMAT_ARGB8888;descriptor.header.w=400;descriptor.header.h=145;descriptor.header.stride=1600;descriptor.data_size=runtime.pixels.size()*4;descriptor.data=(uint8_t*)runtime.pixels.data();
-    canvas=lv_image_create(lv_screen_active());lv_image_set_src(canvas,&descriptor);lv_obj_set_pos(canvas,0,50);lv_image_set_pivot(canvas,0,0);lv_image_set_scale(canvas,512);
+    canvas=lv_image_create(lv_screen_active());lv_image_set_src(canvas,&descriptor);screen::place(canvas,0,50);screen::size(canvas,800,290);lv_image_set_inner_align(canvas,LV_IMAGE_ALIGN_CONTAIN);
     // Image zoom does not enlarge LVGL's hit box; cover the displayed canvas.
-    auto *touch=lv_obj_create(lv_screen_active());lv_obj_remove_style_all(touch);lv_obj_set_pos(touch,0,50);lv_obj_set_size(touch,800,290);lv_obj_remove_flag(touch,LV_OBJ_FLAG_SCROLLABLE);lv_obj_add_flag(touch,LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(touch,[](lv_event_t *e){auto code=lv_event_get_code(e);if(code!=LV_EVENT_PRESSED&&code!=LV_EVENT_PRESSING&&code!=LV_EVENT_RELEASED)return;lv_point_t p;lv_indev_get_point(lv_indev_active(),&p);if(!runtime.pointer(p.x/2,(p.y-50)/2,code!=LV_EVENT_RELEASED))error(runtime.error);},LV_EVENT_ALL,nullptr);
+    auto *touch=lv_obj_create(lv_screen_active());lv_obj_remove_style_all(touch);screen::place(touch,0,50);screen::size(touch,800,290);lv_obj_remove_flag(touch,LV_OBJ_FLAG_SCROLLABLE);lv_obj_add_flag(touch,LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(touch,[](lv_event_t *e){auto code=lv_event_get_code(e);if(code!=LV_EVENT_PRESSED&&code!=LV_EVENT_PRESSING&&code!=LV_EVENT_RELEASED)return;lv_point_t p,local;lv_indev_get_point(lv_indev_active(),&p);if(!screen::image_point(canvas,p,400,145,&local)){if(code==LV_EVENT_RELEASED)runtime.pointer(0,0,false);return;}if(!runtime.pointer(local.x,local.y,code!=LV_EVENT_RELEASED))error(runtime.error);},LV_EVENT_ALL,nullptr);
     button(tr("示例","Demos"),5,3,85,44,6);hint=button(title.c_str(),99,3,298,44,7);
     pause_label=button(tr("P 暂停","P Pause"),406,3,122,44,7);button(tr("R 重置","R Reset"),537,3,122,44,8);button(tr("E 编辑","E Edit"),668,3,126,44,9);
 }
@@ -75,7 +76,7 @@ void editor_hint(){
 }
 void edit(){
     clear(Page::Edit);prefix=0;button(tr("保存返回","Save / Back"),8,3,148,44,6);label(tr("我的程序 · 实体键盘输入","My sketch · Physical keyboard"),176,14,400);button(tr("保存并运行","Save and Run"),604,3,188,44,10);
-    editor=lv_textarea_create(lv_screen_active());lv_obj_set_pos(editor,8,54);lv_obj_set_size(editor,784,248);lv_textarea_set_max_length(editor,16384);lv_textarea_set_one_line(editor,false);lv_textarea_set_text(editor,source.c_str());lv_textarea_set_cursor_pos(editor,LV_TEXTAREA_CURSOR_LAST);
+    editor=lv_textarea_create(lv_screen_active());screen::place(editor,8,54);screen::size(editor,784,248);lv_textarea_set_max_length(editor,16384);lv_textarea_set_one_line(editor,false);lv_textarea_set_text(editor,source.c_str());lv_textarea_set_cursor_pos(editor,LV_TEXTAREA_CURSOR_LAST);
     lv_obj_set_style_bg_color(editor,lv_color_hex(0x172638),0);lv_obj_set_style_text_color(editor,lv_color_hex(0xeaf3fb),0);if(mono)lv_obj_set_style_text_font(editor,mono,0);
     hint=label("",10,312,782,0xa7bfd0);editor_hint();
 }
@@ -84,7 +85,7 @@ void help(){
     label(tr("使用 JavaScript 的 setup() / draw()；画布固定 400×145。\n提供线条、矩形、椭圆、三角形、颜色、旋转、平移和 PVector。\n点击画布触发 mousePressed()；拖动更新 mouseX / mouseY。\n运行时 P/空格暂停，R 重置，E 编辑；返回键回示例。\n编辑时双击 Shift 切换大小写；右上退格删除，回车换行。\n相机键一次进入导航，连续两次进入符号，按字母完成输入。\n完整 API 与示例来源见仓库 processing/README.md。\n不支持 Java .pde、P3D/WebGL、浏览器 DOM 和外部库。",
         "JavaScript setup() / draw(); fixed 400x145 canvas.\nLines, rectangles, ellipses, triangles, transforms and PVector.\nTap: mousePressed(); drag: mouseX / mouseY.\nP/Space pause, R reset, E edit; Back returns to demos.\nDouble Shift toggles capitals; Backspace deletes; Enter newline.\nCamera once: navigation; twice: punctuation; then a letter.\nSee processing/README.md for the API and example sources.\nNo Java .pde, P3D/WebGL, DOM or external libraries."),18,61,765,0xb7cbdc);
 }
-void error(const std::string &s){problem=s;clear(Page::Error);label(tr("程序已停止","Sketch stopped"),18,16,760,0xffbea6);auto *o=label(problem,18,60,762,0xd8e4ef);if(mono)lv_obj_set_style_text_font(o,mono,0);lv_obj_set_height(o,195);lv_label_set_long_mode(o,LV_LABEL_LONG_CLIP);button(tr("E  编辑修正","E  Edit sketch"),18,280,360,44,9);button(tr("返回示例","Back to demos"),397,280,386,44,6);}
+void error(const std::string &s){problem=s;clear(Page::Error);label(tr("程序已停止","Sketch stopped"),18,16,760,0xffbea6);auto *o=label(problem,18,60,762,0xd8e4ef);if(mono)lv_obj_set_style_text_font(o,mono,0);screen::set_height(o,195);lv_label_set_long_mode(o,LV_LABEL_LONG_CLIP);button(tr("E  编辑修正","E  Edit sketch"),18,280,360,44,9);button(tr("返回示例","Back to demos"),397,280,386,44,6);}
 void key(uint32_t k){
     if(k==screen::KEY_HOME){if(page==Page::Edit)save();screen::quit=true;return;}
     if(page==Page::Edit){

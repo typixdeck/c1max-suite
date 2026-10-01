@@ -15,13 +15,13 @@
 namespace terminal {
 Pty::~Pty() { stop(); }
 void Pty::fail(const char *operation) { error_ = std::string(operation) + ": " + std::strerror(errno); }
-bool Pty::resize(int rows,int cols) {
+bool Pty::resize(int rows,int cols,int pixel_width,int pixel_height) {
     if(master_<0||rows<1||cols<1||rows>200||cols>400)return false;
-    winsize size{};size.ws_row=rows;size.ws_col=cols;size.ws_xpixel=800;size.ws_ypixel=308;
+    winsize size{};size.ws_row=rows;size.ws_col=cols;size.ws_xpixel=std::clamp(pixel_width,0,65535);size.ws_ypixel=std::clamp(pixel_height,0,65535);
     if(ioctl(master_,TIOCSWINSZ,&size)){fail("Resize PTY");return false;}return true;
 }
 bool Pty::start(const std::vector<std::string> &argv, int rows, int cols,
-                const std::string &directory, const std::vector<std::string> &environment) {
+                const std::string &directory, const std::vector<std::string> &environment,int pixel_width,int pixel_height) {
     stop(); error_.clear(); eof_ = false; reaped_ = false; status_ = 0;
     if (argv.empty() || argv[0].empty() || argv[0][0] != '/' || rows < 1 || cols < 1 || rows > 200 || cols > 400) {
         error_ = "Invalid shell or terminal size"; return false;
@@ -49,7 +49,7 @@ bool Pty::start(const std::vector<std::string> &argv, int rows, int cols,
     settings.c_cc[VEOF] = 4; settings.c_cc[VSTART] = 17; settings.c_cc[VSTOP] = 19;
     settings.c_cc[VSUSP] = 26; settings.c_cc[VMIN] = 1; settings.c_cc[VTIME] = 0;
     winsize size{}; size.ws_row = static_cast<unsigned short>(rows); size.ws_col = static_cast<unsigned short>(cols);
-    size.ws_xpixel = 800; size.ws_ypixel = 308;
+    size.ws_xpixel=std::clamp(pixel_width,0,65535);size.ws_ypixel=std::clamp(pixel_height,0,65535);
     if (tcsetattr(slave, TCSANOW, &settings) || ioctl(slave, TIOCSWINSZ, &size)) {
         fail("Configure PTY"); close(slave); stop(); return false;
     }

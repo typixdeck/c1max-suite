@@ -19,6 +19,7 @@
       "Game"
     ],
     "desktopFile": "typix-ps1.desktop",
+    "icon": "typix-ps1",
     "runtime": {
       "kind": "python-script",
       "path": "/usr/share/typix-ps1/game_library.py"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-ps1_0.1.0-1_all.deb",
-    "sha256": "cf449267afb4235a439ec4fa2bdb54995d7e759674b06811086fcbca22253eb1"
+    "version": "0.2.0-1",
+    "file": "dist/typix-ps1_0.2.0-1_all.deb",
+    "sha256": "3f26a072ae41120655f72ee18589ac9a9b7970aeffd5c9199a4315345440157e"
   },
   "screenshots": [
     {
       "path": "docs/screenshots/ps1.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "caption": "0.1.0 CM4 隔离显示中的界面参考；未验证本次候选版本"
     }
   ]
 }

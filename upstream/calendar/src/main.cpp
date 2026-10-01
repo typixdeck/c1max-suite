@@ -2,6 +2,7 @@
 #include "calendar_model.hpp"
 #include "calendar_store.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "net.hpp"
 #include "lvgl.h"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
@@ -62,23 +63,23 @@ void set_focus(size_t index){
     lv_obj_scroll_to_view(focus[focused].obj,LV_ANIM_OFF);
 }
 lv_obj_t *label(lv_obj_t *parent,const std::string &text,int x,int y,int width,uint32_t color=ink){
-    auto o=lv_label_create(parent);lv_label_set_text(o,text.c_str());lv_obj_set_pos(o,x,y);lv_obj_set_width(o,width);
+    auto o=lv_label_create(parent);lv_label_set_text(o,text.c_str());screen::place(o,x,y);screen::set_width(o,width);
     lv_obj_set_style_text_color(o,lv_color_hex(color),0);lv_label_set_long_mode(o,LV_LABEL_LONG_WRAP);return o;
 }
 lv_obj_t *button(lv_obj_t *parent,const std::string &text,int x,int y,int width,int height,std::function<void()> fn){
-    auto o=lv_button_create(parent);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,width,height);
+    auto o=lv_button_create(parent);screen::place(o,x,y);screen::size(o,width,height);
     lv_obj_set_style_bg_color(o,lv_color_hex(panel),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);
     lv_obj_set_style_text_color(o,lv_color_hex(ink),0);lv_obj_set_style_radius(o,6,0);lv_obj_set_style_shadow_width(o,0,0);
     lv_obj_set_style_pad_all(o,4,0);lv_obj_set_style_border_width(o,0,0);
     lv_obj_set_style_outline_color(o,lv_color_hex(accent),LV_STATE_FOCUSED);lv_obj_set_style_outline_width(o,2,LV_STATE_FOCUSED);
-    auto l=lv_label_create(o);lv_label_set_text(l,text.c_str());lv_obj_set_width(l,width-12);lv_obj_set_style_text_align(l,LV_TEXT_ALIGN_CENTER,0);
-    lv_obj_set_style_text_color(l,lv_color_hex(ink),0);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);lv_obj_set_height(l,26);lv_obj_center(l);
+    auto l=lv_label_create(o);lv_label_set_text(l,text.c_str());screen::set_width(l,width-12);lv_obj_set_style_text_align(l,LV_TEXT_ALIGN_CENTER,0);
+    lv_obj_set_style_text_color(l,lv_color_hex(ink),0);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);screen::set_height(l,26);lv_obj_center(l);
     auto index=focus.size();focus.push_back({o,false,std::move(fn)});
     lv_obj_add_event_cb(o,[](lv_event_t *e){auto i=reinterpret_cast<uintptr_t>(lv_event_get_user_data(e));if(i<focus.size()){auto action=focus[i].action;safely(action);}},LV_EVENT_CLICKED,reinterpret_cast<void*>(index));
     return o;
 }
 lv_obj_t *field(lv_obj_t *parent,const std::string &text,int x,int y,int width,int height,size_t maximum,bool multiline=false){
-    auto o=lv_textarea_create(parent);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,width,height);
+    auto o=lv_textarea_create(parent);screen::place(o,x,y);screen::size(o,width,height);
     lv_obj_set_style_bg_color(o,lv_color_hex(0x283e50),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);
     lv_obj_set_style_text_color(o,lv_color_hex(ink),0);lv_obj_set_style_border_width(o,1,0);
     lv_obj_set_style_border_color(o,lv_color_hex(0x415b70),0);lv_obj_set_style_border_color(o,lv_color_hex(accent),LV_STATE_FOCUSED);
@@ -95,11 +96,11 @@ lv_obj_t *begin(const std::string &title,const std::string &hint,bool with_back=
     lv_obj_set_style_bg_opa(root,LV_OPA_COVER,0);lv_obj_set_style_text_color(root,lv_color_hex(ink),0);lv_obj_set_style_text_font(root,font,0);
     label(root,title,16,14,650);
     if(with_back)button(root,"返回",692,7,92,38,back);
-    footer=label(root,message.empty()?hint:message,16,312,768,muted);lv_label_set_long_mode(footer,LV_LABEL_LONG_DOT);lv_obj_set_height(footer,24);
+    footer=label(root,message.empty()?hint:message,16,312,768,muted);lv_label_set_long_mode(footer,LV_LABEL_LONG_DOT);screen::set_height(footer,24);
     return root;
 }
 lv_obj_t *scroll_area(lv_obj_t *root,int y=55,int height=246){
-    auto o=lv_obj_create(root);lv_obj_remove_style_all(o);lv_obj_set_pos(o,16,y);lv_obj_set_size(o,768,height);
+    auto o=lv_obj_create(root);lv_obj_remove_style_all(o);screen::place(o,16,y);screen::size(o,768,height);
     lv_obj_set_scroll_dir(o,LV_DIR_VER);lv_obj_set_scrollbar_mode(o,LV_SCROLLBAR_MODE_AUTO);scroller=o;return o;
 }
 void load_files(){
@@ -231,7 +232,7 @@ void render(){
             lv_obj_set_style_bg_color(cell,lv_color_hex(d.selected?accent:d.today?0x294b44:panel),0);auto l=lv_obj_get_child(cell,0);lv_obj_set_style_text_color(l,lv_color_hex(d.selected?bg:d.in_month?ink:muted),0);}
         label(root,calendar::date_key(selected),540,65,244);label(root,weekdays[calendar::weekday_monday0(selected)],540,96,244,accent);
         auto chosen=calendar::events_for_date(events,selected);std::string preview=chosen.empty()?"这一天没有日程\n按 N 添加新日程":std::to_string(chosen.size())+" 项日程\n"+chosen.front().title;
-        auto l=label(root,preview,540,133,244);lv_obj_set_height(l,97);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);
+        auto l=label(root,preview,540,133,244);screen::set_height(l,97);lv_label_set_long_mode(l,LV_LABEL_LONG_DOT);
         button(root,"Enter 查看 / 编辑",540,249,244,44,[]{page=Page::Day;message.clear();render();});
         if(skipped)report("部分 ICS 规则或超额条目已跳过；本地日程可正常管理");return;
     }

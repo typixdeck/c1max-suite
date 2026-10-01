@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Build complete per-app Debian payloads. No install, upload or signing.
 
-Run natively on official Pi OS ARM64 after CMake. Repository is an explicit
+Run natively on official Pi OS ARM64 after CMake. Pure Python packages may
+also be assembled with an explicit target OS; this does not validate runtime.
+Repository is an explicit
 publication input so development cannot invent a hosted source repository.
 """
 import argparse
@@ -16,7 +18,7 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.1.0-1'
+VERSION = '0.2.0-1'
 APPS = {
     'calculator': ('计算器', 'Calculator', 'Utility', '四则、括号、乘方、历史与实体键盘计算', ''),
     'calendar': ('日历', 'Calendar', 'Office', '月历、本地日程、ICS 导入导出与订阅', 'wget, ca-certificates'),
@@ -35,6 +37,16 @@ APPS = {
     'ps1': ('PS1 游戏库', 'PS1 Library', 'Game', 'PS1 光盘游戏库、BIOS 导入与 Mednafen 即时存档运行', 'mednafen'),
 }
 NATIVE = set(APPS) - {'piano', 'camera', 'hidpilot', 'dosbox', 'ps1'}
+DEFAULT_APPS = [name for name in APPS if name != 'camera']
+
+
+def screenshot_metadata(name, version):
+    responsive = f'docs/screenshots/{name}-responsive-800x600.png'
+    if name != 'camera' and (ROOT / responsive).is_file():
+        return [{'path': responsive, 'caption': '本机源码 LVGL 内容渲染，800×600；未验证 CM4 GTK 窗口与实体触摸'}]
+    caption = ('CM4 独立 800×600 合成相机测试画面' if name == 'camera' else
+               '0.1.0 CM4 隔离显示中的界面参考；未验证本次候选版本')
+    return [{'path': 'docs/screenshots/' + name + '.png', 'caption': caption}]
 
 
 def copy(src, dest):
@@ -132,30 +144,52 @@ def build(name, args, codename):
         'id': 'ai.typixdeck.' + name, 'package': package,
         'name': {'zh-CN': zh, 'en': 'Typix ' + english}, 'summary': {'zh-CN': summary},
         'description': {'zh-CN': summary + '。完整原生 Linux 应用；保留用户自己的数据。硬件和服务依赖请见应用说明。'},
-        'categories': [category], 'desktopFile': package + '.desktop', 'runtime': runtime, 'requiredPayload': required,
+        'categories': [category], 'desktopFile': package + '.desktop', 'icon': package, 'runtime': runtime, 'requiredPayload': required,
         'compatibility': {'arch': ['arm64'], 'minMemoryMB': 128 if name not in {'ps1','dosbox'} else 256, 'minFreeDiskMB': 64,
                           'display': ['wayland', 'x11'], 'requiredFeatures': []}},
         'release': {'version': args.version, 'file': 'dist/' + filename, 'sha256': digest},
-        'screenshots': [{'path': 'docs/screenshots/' + name + '.png', 'caption': ('CM4 独立 800×600 合成相机测试画面' if name == 'camera' else 'CM4 独立 800×600 测试会话中的实际界面')}]}
+        'screenshots': screenshot_metadata(name, args.version)}
     write(root / 'app.json', json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
-    write(root / 'README.md', f'# Typix {english}\n\n{summary}。\n\n完整 deb、原生界面、用户数据与软件包分离。构建源位于父级 C1Max suite；运行 `python3 tools/build_debs.py --repository OWNER/REPO` 构建全部应用。软件包仅兼容官方 Raspberry Pi OS {codename} ARM64。\n\n见随包 PORT-STATUS.md 的具体支持范围和硬件限制。需要媒体服务/ROM/BIOS/USB 节点的功能不会因安装软件包而自动具备。截图为真实 CM4 隔离显示测试，不表示外部硬件已验收。\n')
+    write(root / 'README.md', f'# Typix {english}\n\n{summary}。\n\n完整 deb、原生界面、用户数据与软件包分离。构建源位于父级 C1Max suite；运行 `python3 tools/build_debs.py --repository OWNER/REPO --apps {name}` 构建该应用。软件包仅兼容官方 Raspberry Pi OS {codename} ARM64。\n\n见随包 PORT-STATUS.md 的具体支持范围和硬件限制。需要媒体服务/ROM/BIOS/USB 节点的功能不会因安装软件包而自动具备。截图来源与验证范围见 app.json，源码渲染和旧版本参考图不表示本次 CM4 实体硬件已验收。\n')
     return {'id': name, 'package': package, 'file': str((dist / filename).relative_to(ROOT)), 'sha256': digest, 'depends': depends, 'compatibleOS': 'raspios-' + codename}
+
+
+def target_codename(args):
+    if args.python_only:
+        if not args.target_os:
+            raise ValueError('--python-only requires explicit --target-os')
+        if set(args.apps) - {'piano', 'hidpilot', 'dosbox', 'ps1'}:
+            raise ValueError('--python-only accepts only piano, hidpilot, dosbox and ps1; native apps and held Camera are excluded')
+        return args.target_os.removeprefix('raspios-')
+    if args.target_os:
+        raise ValueError('--target-os is only for explicit --python-only source packaging')
+    if platform.system() != 'Linux' or platform.machine() not in {'aarch64', 'arm64'}:
+        raise ValueError('Native build and dependency inspection require Linux ARM64')
+    os_release = dict(line.split('=', 1) for line in Path('/etc/os-release').read_text().splitlines() if '=' in line)
+    codename = os_release.get('VERSION_CODENAME', '').strip('"')
+    if codename not in {'bookworm', 'trixie'}:
+        raise ValueError('Supported build distributions are official Pi OS Bookworm or Trixie')
+    return codename
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--repository', required=True, help='Explicit source publication owner/repo; not created or uploaded')
     parser.add_argument('--version', default=VERSION)
-    parser.add_argument('--apps', nargs='*', choices=list(APPS), default=list(APPS))
+    parser.add_argument('--apps', nargs='+', choices=list(APPS), default=DEFAULT_APPS)
+    parser.add_argument('--python-only', action='store_true', help='Assemble selected architecture-all Python source packages without native compilation; excludes Camera')
+    parser.add_argument('--target-os', choices=['raspios-bookworm', 'raspios-trixie'], help='Required target declaration for --python-only; does not assert on-device runtime validation')
     args = parser.parse_args()
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', args.repository):
         parser.error('repository must be owner/repo')
-    if platform.machine() not in {'aarch64', 'arm64'}:
-        parser.error('Build and dependency inspection require Linux ARM64')
-    os_release = dict(line.split('=', 1) for line in Path('/etc/os-release').read_text().splitlines() if '=' in line)
-    codename = os_release.get('VERSION_CODENAME', '').strip('"')
-    if codename not in {'bookworm', 'trixie'}:
-        parser.error('Supported build distributions are official Pi OS Bookworm or Trixie')
+    if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+-[0-9]+', args.version):
+        parser.error('version must be a numeric Debian release such as 0.2.0-1')
+    if 'camera' in args.apps and args.version != '0.1.0-1':
+        parser.error('Camera is held at 0.1.0-1; select it separately with --apps camera --version 0.1.0-1')
+    try:
+        codename = target_codename(args)
+    except (OSError, ValueError) as exc:
+        parser.error(str(exc))
     (ROOT / 'build').mkdir(exist_ok=True)
     result = [build(name, args, codename) for name in args.apps]
     write(ROOT / 'build/packages.json', json.dumps(result, indent=2, ensure_ascii=False) + '\n')

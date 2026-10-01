@@ -12,12 +12,13 @@ public:
     Pty(const Pty &) = delete;
     Pty &operator=(const Pty &) = delete;
     bool start(const std::vector<std::string> &argv, int rows, int cols,
-               const std::string &directory, const std::vector<std::string> &environment);
+               const std::string &directory, const std::vector<std::string> &environment,
+               int pixel_width=0,int pixel_height=0);
     // Nonblocking; output/read work is bounded so keys and shutdown keep running.
     std::string read(size_t budget = 32768);
     bool send(const std::string &bytes);
     void pump();
-    bool resize(int rows,int cols);
+    bool resize(int rows,int cols,int pixel_width=0,int pixel_height=0);
     bool running();
     bool eof() const { return eof_; }
     int status() const { return status_; }

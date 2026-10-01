@@ -2,6 +2,7 @@
 #include "typix_runtime.hpp"
 #include "desktop_volume.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "net.hpp"
 #include <lvgl.h>
 #include <algorithm>
@@ -71,13 +72,13 @@ void signal_stop(int){stopped=1;}
 constexpr uint32_t ink=0x203732,paper=0xf7f2e6,teal=0x34736b,brass=0xa77d3d,muted=0x687b73;
 
 lv_obj_t *label(const char *text,int x,int y,int width,uint32_t color=ink,int size=18){
-    auto *o=lv_label_create(lv_screen_active());lv_label_set_text(o,text);lv_obj_set_pos(o,x,y);lv_obj_set_width(o,width);
+    auto *o=lv_label_create(lv_screen_active());lv_label_set_text(o,text);screen::place(o,x,y);screen::set_width(o,width);
     lv_obj_set_style_text_color(o,lv_color_hex(color),0);
     lv_font_t *f=size<=16&&font_small?font_small:size>=22&&font_large?font_large:font;
     if(f)lv_obj_set_style_text_font(o,f,0);return o;
 }
 lv_obj_t *panel(int x,int y,int w,int h,uint32_t color,int radius=12){
-    auto *o=lv_obj_create(lv_screen_active());lv_obj_remove_flag(o,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,h);
+    auto *o=lv_obj_create(lv_screen_active());lv_obj_remove_flag(o,LV_OBJ_FLAG_SCROLLABLE);screen::place(o,x,y);screen::size(o,w,h);
     lv_obj_set_style_bg_color(o,lv_color_hex(color),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);
     lv_obj_set_style_radius(o,radius,0);lv_obj_set_style_border_width(o,1,0);lv_obj_set_style_border_color(o,lv_color_hex(0xd5cdbb),0);
     lv_obj_set_style_shadow_width(o,0,0);return o;
@@ -297,15 +298,15 @@ void paint(){
     lv_obj_set_style_bg_color(root,lv_color_hex(0xe9e2d2),0);lv_obj_set_style_text_color(root,lv_color_hex(ink),0);if(font)lv_obj_set_style_text_font(root,font,0);
     panel(12,6,776,38,0xf7f2e6,11);
     label("AIR / TUNE",23,10,172,ink,24);label("WORLD RADIO    /    LISTEN YOUR WAY",205,15,430,muted,16);
-    badge=lv_button_create(root);lv_obj_remove_flag(badge,LV_OBJ_FLAG_CLICKABLE);lv_obj_set_pos(badge,655,11);lv_obj_set_size(badge,120,27);button_style(badge,player_pid>0?teal:0x5a6d65);
-    badge_text=lv_label_create(badge);lv_label_set_text(badge_text,"READY");lv_obj_set_width(badge_text,110);lv_label_set_long_mode(badge_text,LV_LABEL_LONG_CLIP);lv_obj_center(badge_text);lv_obj_set_style_text_align(badge_text,LV_TEXT_ALIGN_CENTER,0);lv_obj_set_style_text_color(badge_text,lv_color_hex(0xffffff),0);if(font_small)lv_obj_set_style_text_font(badge_text,font_small,0);
+    badge=lv_button_create(root);lv_obj_remove_flag(badge,LV_OBJ_FLAG_CLICKABLE);screen::place(badge,655,11);screen::size(badge,120,27);button_style(badge,player_pid>0?teal:0x5a6d65);
+    badge_text=lv_label_create(badge);lv_label_set_text(badge_text,"READY");screen::set_width(badge_text,110);lv_label_set_long_mode(badge_text,LV_LABEL_LONG_CLIP);lv_obj_center(badge_text);lv_obj_set_style_text_align(badge_text,LV_TEXT_ALIGN_CENTER,0);lv_obj_set_style_text_color(badge_text,lv_color_hex(0xffffff),0);if(font_small)lv_obj_set_style_text_font(badge_text,font_small,0);
     panel(12,50,512,232,paper,13);panel(536,50,252,232,ink,13);
 
     static const Browse tabs[]={Browse::Popular,Browse::Country,Browse::Genre,Browse::Mood,Browse::Group,Browse::Saved};
     static const char *tab_names[]={"TOP","COUNTRY","GENRE","MOOD","GROUP","SAVED"};
     const bool saved_page=browse==Browse::Saved&&!category_list&&!query_mode&&!add_mode;
     if(!add_mode)for(int i=0;i<6;i++){
-        auto *b=lv_button_create(root);lv_obj_set_pos(b,21+i*82,56);lv_obj_set_size(b,78,31);button_style(b,browse==tabs[i]?0xc8ded3:0xeae4d6);
+        auto *b=lv_button_create(root);screen::place(b,21+i*82,56);screen::size(b,78,31);button_style(b,browse==tabs[i]?0xc8ded3:0xeae4d6);
         auto *t=lv_label_create(b);lv_label_set_text(t,tab_names[i]);lv_obj_center(t);if(font_small)lv_obj_set_style_text_font(t,font_small,0);
         lv_obj_add_event_cb(b,[](lv_event_t *e){if(busy)return;auto i=int(reinterpret_cast<intptr_t>(lv_event_get_user_data(e)));static const Browse values[]={Browse::Popular,Browse::Country,Browse::Genre,Browse::Mood,Browse::Group,Browse::Saved};change_browse(values[i]);},LV_EVENT_CLICKED,reinterpret_cast<void*>(intptr_t(i)));
     }
@@ -315,34 +316,34 @@ void paint(){
     else if(browse==Browse::Search)section=current_query.empty()?"SEARCH RESULTS":"SEARCH  /  "+current_query;
     else if(saved_page)section="STORED ON THIS DEVICE  ·  "+std::to_string(favorites.size()+legacy_favorites.size())+" STATIONS";
     if(!add_mode&&!section.empty()){auto *section_label=label(section.c_str(),23,87,495,muted,14);lv_label_set_long_mode(section_label,LV_LABEL_LONG_DOT);}
-    query=lv_textarea_create(root);lv_obj_set_pos(query,21,add_mode?168:103);lv_obj_set_size(query,saved_page?376:494,add_mode?39:31);lv_textarea_set_one_line(query,true);
+    query=lv_textarea_create(root);screen::place(query,21,add_mode?168:103);screen::size(query,saved_page?376:494,add_mode?39:31);lv_textarea_set_one_line(query,true);
     lv_textarea_set_placeholder_text(query,add_mode?(add_step==0?"Station name":"http:// or https:// stream URL"):"Q  Search stations by name");
     lv_textarea_set_max_length(query,add_mode?(add_step==0?80:2048):256);
     const std::string input_text=add_mode?(add_step==0?add_name:add_url):(query_mode?old_query:current_query);
     lv_textarea_set_text(query,input_text.c_str());lv_obj_set_style_bg_color(query,lv_color_hex(0xfffcf5),0);lv_obj_set_style_text_color(query,lv_color_hex(ink),0);
     lv_obj_set_style_border_color(query,lv_color_hex(query_mode||add_mode?teal:0xd4c8aa),0);lv_obj_set_style_border_width(query,query_mode||add_mode?2:1,0);lv_obj_set_style_radius(query,8,0);lv_obj_set_style_pad_left(query,12,0);lv_obj_set_style_pad_right(query,10,0);if(add_mode&&font)lv_obj_set_style_text_font(query,font,0);else if(font_small)lv_obj_set_style_text_font(query,font_small,0);
-    if(saved_page){auto *add=lv_button_create(root);lv_obj_set_pos(add,406,103);lv_obj_set_size(add,109,31);button_style(add,teal);auto *text=lv_label_create(add);lv_label_set_text(text,"+  ADD STATION");lv_obj_center(text);lv_obj_set_style_text_color(text,lv_color_hex(0xffffff),0);if(font_small)lv_obj_set_style_text_font(text,font_small,0);lv_obj_add_event_cb(add,[](lv_event_t*){if(!busy)begin_add_station();},LV_EVENT_CLICKED,nullptr);}
+    if(saved_page){auto *add=lv_button_create(root);screen::place(add,406,103);screen::size(add,109,31);button_style(add,teal);auto *text=lv_label_create(add);lv_label_set_text(text,"+  ADD STATION");lv_obj_center(text);lv_obj_set_style_text_color(text,lv_color_hex(0xffffff),0);if(font_small)lv_obj_set_style_text_font(text,font_small,0);lv_obj_add_event_cb(add,[](lv_event_t*){if(!busy)begin_add_station();},LV_EVENT_CLICKED,nullptr);}
     const int start=(selected/5)*5;const int total=int(category_list?categories.size():stations.size());const int shown=std::max(0,std::min(5,total-start));
     if(add_mode){
-        auto step_chip=[&](int x,int width,const char *text,bool active){auto *chip=lv_button_create(root);lv_obj_remove_flag(chip,LV_OBJ_FLAG_CLICKABLE);lv_obj_set_pos(chip,x,59);lv_obj_set_size(chip,width,23);button_style(chip,active?0xc8ded3:0xeae4d6);auto *t=lv_label_create(chip);lv_label_set_text(t,text);lv_obj_center(t);if(font_small)lv_obj_set_style_text_font(t,font_small,0);};
+        auto step_chip=[&](int x,int width,const char *text,bool active){auto *chip=lv_button_create(root);lv_obj_remove_flag(chip,LV_OBJ_FLAG_CLICKABLE);screen::place(chip,x,59);screen::size(chip,width,23);button_style(chip,active?0xc8ded3:0xeae4d6);auto *t=lv_label_create(chip);lv_label_set_text(t,text);lv_obj_center(t);if(font_small)lv_obj_set_style_text_font(t,font_small,0);};
         step_chip(22,144,"01  STATION NAME",add_step==0);step_chip(174,144,"02  STREAM URL",add_step==1);
         label(add_step==0?"Save a local station":"Add the stream address",23,91,480,ink,24);
         label(add_step==0?"Choose a name that is easy to recognize":"Enter the direct HTTP(S) audio stream URL",23,122,480,muted,14);
         label(add_step==0?"STATION NAME":"STREAM URL",23,146,470,teal,13);
         if(add_step==1){auto *preview=label(("SAVING AS   "+add_name).c_str(),23,215,480,muted,14);lv_label_set_long_mode(preview,LV_LABEL_LONG_DOT);}
-        auto *action=lv_button_create(root);lv_obj_remove_flag(action,LV_OBJ_FLAG_CLICKABLE);lv_obj_set_pos(action,23,239);lv_obj_set_size(action,154,27);button_style(action,teal);
+        auto *action=lv_button_create(root);lv_obj_remove_flag(action,LV_OBJ_FLAG_CLICKABLE);screen::place(action,23,239);screen::size(action,154,27);button_style(action,teal);
         auto *action_text=lv_label_create(action);lv_label_set_text(action_text,add_step==0?"ENTER   CONTINUE":"ENTER   SAVE STATION");lv_obj_center(action_text);lv_obj_set_style_text_color(action_text,lv_color_hex(0xffffff),0);if(font_small)lv_obj_set_style_text_font(action_text,font_small,0);
         label("BACKSPACE edits   ·   RETURN cancels",191,245,318,muted,14);
     }
     for(int i=0;!add_mode&&i<shown;i++){
         int index=start+i,y=138+i*28;uint32_t bg=index==selected?0xd8e7dc:0xf7f2e6;
-        auto *row=lv_obj_create(root);lv_obj_remove_flag(row,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_pos(row,20,y);lv_obj_set_size(row,496,26);
+        auto *row=lv_obj_create(root);lv_obj_remove_flag(row,LV_OBJ_FLAG_SCROLLABLE);screen::place(row,20,y);screen::size(row,496,26);
         lv_obj_set_style_bg_color(row,lv_color_hex(bg),0);lv_obj_set_style_bg_opa(row,LV_OPA_COVER,0);lv_obj_set_style_border_width(row,index==selected?1:0,0);lv_obj_set_style_border_color(row,lv_color_hex(0xabc5b7),0);lv_obj_set_style_radius(row,6,0);
         std::string title,detail;
         if(category_list){const auto &c=categories[index];title=c.name;detail=c.count>0?std::to_string(c.count)+" stations":"OPEN";}
         else {const auto &s=stations[index];title=s.name;detail=is_unresolved_save(s)?"RECONNECT":(s.country_code.empty()?"WORLD":s.country_code)+(s.bitrate?"  ·  "+std::to_string(s.bitrate)+"k":"");}
-        auto *name=label(title.c_str(),29,y+3,350,ink,16);lv_obj_set_height(name,22);lv_label_set_long_mode(name,LV_LABEL_LONG_DOT);
-        auto *info=label(detail.c_str(),384,y+5,105,muted,14);lv_obj_set_height(info,18);lv_label_set_long_mode(info,LV_LABEL_LONG_CLIP);
+        auto *name=label(title.c_str(),29,y+3,350,ink,16);screen::set_height(name,22);lv_label_set_long_mode(name,LV_LABEL_LONG_DOT);
+        auto *info=label(detail.c_str(),384,y+5,105,muted,14);screen::set_height(info,18);lv_label_set_long_mode(info,LV_LABEL_LONG_CLIP);
         if(!category_list&&(is_favorite(stations[index])||is_unresolved_save(stations[index])))label("*",498,y+4,14,brass,16);
         lv_obj_add_event_cb(row,[](lv_event_t *e){if(busy)return;selected=int(reinterpret_cast<intptr_t>(lv_event_get_user_data(e)));if(category_list)load_category();else play();},LV_EVENT_CLICKED,reinterpret_cast<void*>(intptr_t(index)));
     }
@@ -356,17 +357,17 @@ void paint(){
         label("Names and stream URLs stay\nin this local list.",553,148,218,0xc5d6c8,14);
         label("SYSTEM VOLUME",553,193,218,0xc5d6c8,13);
         volume_text=label("--",553,211,218,0xf5e7c9,16);
-        volume_bar=lv_bar_create(root);lv_obj_set_pos(volume_bar,553,239);lv_obj_set_size(volume_bar,218,10);lv_bar_set_range(volume_bar,0,100);lv_bar_set_value(volume_bar,last_volume<0?0:last_volume,LV_ANIM_OFF);
+        volume_bar=lv_bar_create(root);screen::place(volume_bar,553,239);screen::size(volume_bar,218,10);lv_bar_set_range(volume_bar,0,100);lv_bar_set_value(volume_bar,last_volume<0?0:last_volume,LV_ANIM_OFF);
         lv_obj_set_style_bg_color(volume_bar,lv_color_hex(0x3d5650),LV_PART_MAIN);lv_obj_set_style_bg_opa(volume_bar,LV_OPA_COVER,LV_PART_MAIN);lv_obj_set_style_radius(volume_bar,4,LV_PART_MAIN);
         lv_obj_set_style_bg_color(volume_bar,lv_color_hex(0x7fc5a8),LV_PART_INDICATOR);lv_obj_set_style_bg_opa(volume_bar,LV_OPA_COVER,LV_PART_INDICATOR);lv_obj_set_style_radius(volume_bar,4,LV_PART_INDICATOR);
         label("Hardware keys  − / +",553,259,220,0xc5d6c8,13);
     }else{
         label("NOW PLAYING",553,61,218,0xd6c9ad,14);
-        now_name=label("Choose a station",553,86,218,0xf8f2e6,22);lv_obj_set_height(now_name,38);lv_label_set_long_mode(now_name,LV_LABEL_LONG_DOT);
+        now_name=label("Choose a station",553,86,218,0xf8f2e6,22);screen::set_height(now_name,38);lv_label_set_long_mode(now_name,LV_LABEL_LONG_DOT);
         now_meta=label("WORLD STREAMS",553,128,218,0xc5d6c8,14);lv_label_set_long_mode(now_meta,LV_LABEL_LONG_DOT);
         label("AUDIO OUTPUT",553,157,218,0xc5d6c8,13);
         volume_text=label("SYSTEM VOLUME  --",553,178,218,0xf5e7c9,16);
-        volume_bar=lv_bar_create(root);lv_obj_set_pos(volume_bar,553,207);lv_obj_set_size(volume_bar,218,12);lv_bar_set_range(volume_bar,0,100);lv_bar_set_value(volume_bar,last_volume<0?0:last_volume,LV_ANIM_OFF);
+        volume_bar=lv_bar_create(root);screen::place(volume_bar,553,207);screen::size(volume_bar,218,12);lv_bar_set_range(volume_bar,0,100);lv_bar_set_value(volume_bar,last_volume<0?0:last_volume,LV_ANIM_OFF);
         lv_obj_set_style_bg_color(volume_bar,lv_color_hex(0x3d5650),LV_PART_MAIN);lv_obj_set_style_bg_opa(volume_bar,LV_OPA_COVER,LV_PART_MAIN);lv_obj_set_style_radius(volume_bar,4,LV_PART_MAIN);
         lv_obj_set_style_bg_color(volume_bar,lv_color_hex(0x7fc5a8),LV_PART_INDICATOR);lv_obj_set_style_bg_opa(volume_bar,LV_OPA_COVER,LV_PART_INDICATOR);lv_obj_set_style_radius(volume_bar,4,LV_PART_INDICATOR);
         label("Hardware volume keys  − / +",553,232,220,0xc5d6c8,13);

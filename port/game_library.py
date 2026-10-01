@@ -133,6 +133,8 @@ def main():
     outer.pack_start(scroll, True, True, 0)
     bar = Gtk.Box(spacing=8)
     outer.pack_start(bar, False, False, 0)
+    # Library actions belong beside the title, rather than a fixed bottom strip.
+    outer.reorder_child(bar, 1)
     outer.pack_start(status, False, False, 0)
     process = [None]
     def refresh():

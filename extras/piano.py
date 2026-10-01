@@ -131,7 +131,7 @@ def run_gui(ui_smoke=False):
     class Piano(Gtk.Window):
         def __init__(self):
             super().__init__(title="Piano")
-            self.set_default_size(800, 500)
+            self.set_default_size(800, 600)
             self.synth, self.pipeline, self.samples = Synth(), None, 0
             self.pointer_down = False
             self.rects = []
@@ -141,6 +141,7 @@ def run_gui(ui_smoke=False):
             self.add(box)
             title = Gtk.Label(label="Piano · two octaves")
             title.set_xalign(0)
+            title.set_line_wrap(True)
             box.pack_start(title, False, False, 0)
             row = Gtk.Box(spacing=10)
             box.pack_start(row, False, False, 0)
@@ -293,7 +294,7 @@ def run_gui(ui_smoke=False):
                 context.rectangle(x + 1, y, w - 2, h - 1)
                 context.fill()
                 context.set_source_rgb(*((.95, .95, .97) if black else (.15, .18, .23)))
-                context.set_font_size(13)
+                context.set_font_size(max(13, min(22, w * .32)))
                 context.move_to(x + w / 2 - 5, h - 22)
                 context.show_text(names[note])
 

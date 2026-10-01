@@ -1,6 +1,7 @@
 #include "typix_runtime.hpp"
 #include "game.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "net.hpp"
 #include "src/libs/tiny_ttf/lv_tiny_ttf.h"
 #include <algorithm>
@@ -27,7 +28,7 @@ bool chinese=true;
 const char *tr(const char *cn,const char *en){return chinese?cn:en;}
 lv_obj_t *label(const char *s,int x,int y,int w,uint32_t color=0xe9eef5,lv_obj_t *parent=nullptr){
     auto *o=lv_label_create(parent?parent:lv_screen_active());lv_label_set_text(o,s);
-    lv_obj_set_pos(o,x,y);lv_obj_set_width(o,w);lv_obj_set_style_text_color(o,lv_color_hex(color),0);return o;
+    screen::place(o,x,y);screen::set_width(o,w);lv_obj_set_style_text_color(o,lv_color_hex(color),0);return o;
 }
 void save(){
     try{c1::save_private(save_path,game.serialize());lv_label_set_text(notice,tr("棋局自动保存","Game saved automatically"));}
@@ -65,14 +66,14 @@ void reset(){bool computer=game.computer;if(pending==2)computer=!computer;dismis
 void place(){if(confirm||game.winner||(game.computer&&game.turn()==2))return;if(game.place(cursor_x,cursor_y)){save();refresh();}}
 void action(int id);
 lv_obj_t *button(const char *text,int x,int y,int w,int id,lv_obj_t *parent=nullptr){
-    auto *o=lv_button_create(parent?parent:lv_screen_active());lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,46);
+    auto *o=lv_button_create(parent?parent:lv_screen_active());screen::place(o,x,y);screen::size(o,w,46);
     lv_obj_set_style_bg_color(o,lv_color_hex(id==0?0x287887:0x293c52),0);lv_obj_set_style_shadow_width(o,0,0);lv_obj_set_style_radius(o,9,0);
     auto *l=lv_label_create(o);lv_label_set_text(l,text);lv_obj_center(l);
     lv_obj_add_event_cb(o,[](lv_event_t *e){action(int(intptr_t(lv_event_get_user_data(e))));},LV_EVENT_CLICKED,(void*)intptr_t(id));return l;
 }
 void request_reset(int type){
     if(confirm)return;pending=type;if(game.moves.empty()){reset();return;}
-    confirm=lv_obj_create(lv_screen_active());lv_obj_set_pos(confirm,335,65);lv_obj_set_size(confirm,445,209);lv_obj_remove_flag(confirm,LV_OBJ_FLAG_SCROLLABLE);
+    confirm=lv_obj_create(lv_screen_active());screen::place(confirm,335,65);screen::size(confirm,445,209);lv_obj_remove_flag(confirm,LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_bg_color(confirm,lv_color_hex(0x1b2b3e),0);lv_obj_set_style_border_color(confirm,lv_color_hex(0x558396),0);lv_obj_set_style_pad_all(confirm,0,0);
     label(tr("开始新棋局？","Start a new game?"),20,18,400,0xffffff,confirm);
     label(tr("当前棋局会被替换。","This will replace the saved game."),20,56,400,0xafbdcc,confirm);
@@ -85,8 +86,9 @@ void action(int id){
 }
 void touch(lv_event_t *){
     if(confirm)return;lv_point_t p;lv_indev_get_point(lv_indev_active(),&p);
-    cursor_x=std::clamp((int(p.x)-15-origin+step/2)/step,0,14);
-    cursor_y=std::clamp((int(p.y)-25-origin+step/2)/step,0,14);refresh();
+    lv_point_t local;if(!screen::image_point(board,p,size,size,&local))return;
+    cursor_x=std::clamp((int(local.x)-origin+step/2)/step,0,14);
+    cursor_y=std::clamp((int(local.y)-origin+step/2)/step,0,14);refresh();
 }
 void key(uint32_t k){
     if(k==screen::KEY_HOME){screen::quit=true;return;}
@@ -109,7 +111,7 @@ int main(){
     lv_obj_set_style_bg_color(root,lv_color_hex(0x111c2b),0);lv_obj_set_style_text_color(root,lv_color_hex(0xe9eef5),0);
     image.header.magic=LV_IMAGE_HEADER_MAGIC;image.header.cf=LV_COLOR_FORMAT_ARGB8888;image.header.w=size;image.header.h=size;image.header.stride=size*4;
     image.data_size=pixels.size()*4;image.data=(uint8_t*)pixels.data();
-    board=lv_image_create(root);lv_image_set_src(board,&image);lv_obj_set_pos(board,15,25);lv_obj_add_flag(board,LV_OBJ_FLAG_CLICKABLE);
+    board=lv_image_create(root);lv_image_set_src(board,&image);screen::place(board,15,25);screen::size(board,size,size);lv_image_set_inner_align(board,LV_IMAGE_ALIGN_CONTAIN);lv_obj_add_flag(board,LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(board,touch,LV_EVENT_CLICKED,nullptr);
     label(tr("五子棋","Gomoku"),340,20,435);status=label("",340,58,435,0x80d2cf);detail=label("",340,94,435,0xacbecf);
     button(tr("回车  落子","Enter  Place"),340,133,211,0);button(tr("U  悔棋","U  Undo"),563,133,211,1);

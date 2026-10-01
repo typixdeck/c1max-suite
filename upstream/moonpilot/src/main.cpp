@@ -6,6 +6,7 @@
 #include "frame_image.hpp"
 #include "process.hpp"
 #include "display.hpp"
+#include "typix_layout.hpp"
 #include "idle_reset.h"
 #include "lv_tiny_ttf.h"
 #include <algorithm>
@@ -41,10 +42,10 @@ volatile sig_atomic_t quitting=0;void quit_signal(int){quitting=1;}
 std::string path(const char*name){return c1::data()+"/moonpilot/"+name;}
 void paint();void stop_task();void request_step();void begin_record();void speak(const std::string&);void set_page(Page);
 void message(const std::string&s){notice=s;if(status_label)lv_label_set_text(status_label,s.c_str());}
-lv_obj_t*box(lv_obj_t*p,int x,int y,int w,int h,uint32_t color=panel){auto*o=lv_obj_create(p);lv_obj_remove_style_all(o);lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,h);lv_obj_remove_flag(o,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_style_bg_color(o,lv_color_hex(color),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_radius(o,10,0);return o;}
-lv_obj_t*text(lv_obj_t*p,const std::string&s,int x,int y,int w,int h=26,uint32_t color=ink,lv_font_t*f=nullptr){auto*o=lv_label_create(p);lv_label_set_text(o,s.c_str());lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,h);lv_label_set_long_mode(o,LV_LABEL_LONG_DOT);lv_obj_set_style_text_color(o,lv_color_hex(color),0);if(f)lv_obj_set_style_text_font(o,f,0);return o;}
+lv_obj_t*box(lv_obj_t*p,int x,int y,int w,int h,uint32_t color=panel){auto*o=lv_obj_create(p);lv_obj_remove_style_all(o);screen::place(o,x,y);screen::size(o,w,h);lv_obj_remove_flag(o,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_style_bg_color(o,lv_color_hex(color),0);lv_obj_set_style_bg_opa(o,LV_OPA_COVER,0);lv_obj_set_style_radius(o,10,0);return o;}
+lv_obj_t*text(lv_obj_t*p,const std::string&s,int x,int y,int w,int h=26,uint32_t color=ink,lv_font_t*f=nullptr){auto*o=lv_label_create(p);lv_label_set_text(o,s.c_str());screen::place(o,x,y);screen::size(o,w,h);lv_label_set_long_mode(o,LV_LABEL_LONG_DOT);lv_obj_set_style_text_color(o,lv_color_hex(color),0);if(f)lv_obj_set_style_text_font(o,f,0);return o;}
 lv_obj_t*button(const std::string&s,int x,int y,int w,std::function<void()>fn,bool active=false){auto*o=box(lv_screen_active(),x,y,w,44,active?teal:panel);lv_obj_add_flag(o,LV_OBJ_FLAG_CLICKABLE);lv_obj_set_style_bg_color(o,lv_color_hex(0x346b72),LV_STATE_PRESSED);callbacks.push_back(std::move(fn));lv_obj_add_event_cb(o,[](lv_event_t*e){auto fn=*static_cast<std::function<void()>*>(lv_event_get_user_data(e));try{fn();}catch(const std::exception&x){message(x.what());}},LV_EVENT_CLICKED,&callbacks.back());auto*l=text(o,s,5,10,w-10,25,active?0x102b31:ink);lv_obj_set_style_text_align(l,LV_TEXT_ALIGN_CENTER,0);return o;}
-lv_obj_t*field(const std::string&value,int x,int y,int w,bool password=false){auto*o=lv_textarea_create(lv_screen_active());lv_obj_set_pos(o,x,y);lv_obj_set_size(o,w,44);lv_textarea_set_one_line(o,true);lv_textarea_set_max_length(o,512);lv_textarea_set_password_mode(o,password);lv_textarea_set_text(o,value.c_str());lv_obj_set_style_bg_color(o,lv_color_hex(panel),0);lv_obj_set_style_text_color(o,lv_color_hex(ink),0);lv_obj_set_style_border_color(o,lv_color_hex(teal),LV_STATE_FOCUSED);lv_obj_set_style_pad_all(o,9,0);lv_obj_add_event_cb(o,[](lv_event_t*e){auto*o=(lv_obj_t*)lv_event_get_target(e);if(focused&&focused!=o)lv_obj_remove_state(focused,LV_STATE_FOCUSED);focused=o;lv_obj_add_state(o,LV_STATE_FOCUSED);},LV_EVENT_CLICKED,nullptr);return o;}
+lv_obj_t*field(const std::string&value,int x,int y,int w,bool password=false){auto*o=lv_textarea_create(lv_screen_active());screen::place(o,x,y);screen::size(o,w,44);lv_textarea_set_one_line(o,true);lv_textarea_set_max_length(o,512);lv_textarea_set_password_mode(o,password);lv_textarea_set_text(o,value.c_str());lv_obj_set_style_bg_color(o,lv_color_hex(panel),0);lv_obj_set_style_text_color(o,lv_color_hex(ink),0);lv_obj_set_style_border_color(o,lv_color_hex(teal),LV_STATE_FOCUSED);lv_obj_set_style_pad_all(o,9,0);lv_obj_add_event_cb(o,[](lv_event_t*e){auto*o=(lv_obj_t*)lv_event_get_target(e);if(focused&&focused!=o)lv_obj_remove_state(focused,LV_STATE_FOCUSED);focused=o;lv_obj_add_state(o,LV_STATE_FOCUSED);},LV_EVENT_CLICKED,nullptr);return o;}
 Settings&service(){return settings_tab==0?vision:settings_tab==1?chat:settings_tab==2?asr:tts;}
 Json config(){auto encode=[](const Settings&s){return Json{{"endpoint",s.endpoint},{"model",s.model},{"token",s.token}};};return {{"vision",encode(vision)},{"chat",encode(chat)},{"asr",encode(asr)},{"tts",encode(tts)},{"spoken",spoken},{"host",{{"address",host.address},{"port",host.port},{"width",host.width},{"height",host.height},{"fps",host.fps},{"bitrate",host.bitrate},{"app_id",app_id}}}};}
 void save_settings(){if(page==Page::Settings&&fields[0]){auto&s=service();s.endpoint=lv_textarea_get_text(fields[0]);s.model=lv_textarea_get_text(fields[1]);s.token=lv_textarea_get_text(fields[2]);if(!s.endpoint.empty())validate_settings(s);}c1::save_private(path("settings.json"),config().dump(2));}
@@ -86,7 +87,7 @@ void update_preview(){
 }
 void manual_tap(lv_event_t*){
     if(!manual||busy||!remote.ready())return;const auto&f=remote.frame();if(f.rgb.empty()||screen::tick()-f.time>2000)return;
-    lv_point_t p;lv_indev_get_point(lv_indev_active(),&p);double scale=std::min(double(preview_w)/f.width,double(preview_h)/f.height);int w=f.width*scale,h=f.height*scale,x0=12+(preview_w-w)/2,y0=56+(preview_h-h)/2;
+    lv_point_t point,p;lv_indev_get_point(lv_indev_active(),&point);if(!screen::image_point(image,point,preview_w,preview_h,&p))return;double scale=std::min(double(preview_w)/f.width,double(preview_h)/f.height);int w=f.width*scale,h=f.height*scale,x0=(preview_w-w)/2,y0=(preview_h-h)/2;
     if(p.x<x0||p.y<y0||p.x>=x0+w||p.y>=y0+h)return;
     try{remote.move(double(p.x-x0)/std::max(1,w-1),double(p.y-y0)/std::max(1,h-1));remote.click();}catch(const std::exception&e){message(e.what());}
 }
@@ -163,14 +164,14 @@ void paint(){
     if(page==Page::Voice){
         auto*conversation=box(r,12,57,488,245);lv_obj_add_flag(conversation,LV_OBJ_FLAG_SCROLLABLE);lv_obj_set_scroll_dir(conversation,LV_DIR_VER);
         std::string transcript=heard.empty()?"按开始录音说话，或在右侧输入文字。\n\n操作请求会填入桌面任务栏，由你按运行开始。":("你："+heard+"\n\nMoonPilot："+reply);
-        auto*l=text(conversation,transcript,16,14,456,1,ink,font);lv_label_set_long_mode(l,LV_LABEL_LONG_WRAP);lv_obj_set_height(l,LV_SIZE_CONTENT);
+        auto*l=text(conversation,transcript,16,14,456,1,ink,font);lv_label_set_long_mode(l,LV_LABEL_LONG_WRAP);screen::set_height(l,LV_SIZE_CONTENT);
         text(r,"文字对话",516,58,270,25,muted,small);task_field=field("",516,82,270);lv_textarea_set_placeholder_text(task_field,"使用实体键盘提问");
         button("发送",516,137,130,[]{text_chat();});button("查看任务",654,137,132,[]{focused=nullptr;task_field=nullptr;set_page(Page::Agent);});
         b=button("开始录音",516,203,270,[]{begin_record();},true);record_label=lv_obj_get_child(b,0);button("再读一遍",516,257,130,[]{speak(reply);});button("停止",654,257,132,[]{stop_task();});status_label=text(r,notice,14,312,770,23,muted,small);return;
     }
     box(r,12,56,preview_w,preview_h,0x0a1015);
     if(connection_job||remote.frame().rgb.empty()){text(r,"远程桌面",34,125,440,35,teal,title);text(r,"在「主机」里添加电脑并连接 Sunshine",34,177,440,58,muted,font);}
-    image=lv_image_create(r);lv_obj_set_pos(image,12,56);lv_obj_set_size(image,preview_w,preview_h);lv_obj_add_flag(image,LV_OBJ_FLAG_CLICKABLE);lv_obj_add_event_cb(image,manual_tap,LV_EVENT_CLICKED,nullptr);
+    image=lv_image_create(r);screen::place(image,12,56);screen::size(image,preview_w,preview_h);lv_image_set_inner_align(image,LV_IMAGE_ALIGN_CONTAIN);lv_obj_add_flag(image,LV_OBJ_FLAG_CLICKABLE);lv_obj_add_event_cb(image,manual_tap,LV_EVENT_CLICKED,nullptr);
     text(r,"任务",516,57,270,25,muted,small);task_field=field(goal,516,82,270);lv_textarea_set_placeholder_text(task_field,"希望电脑完成什么？");
     status_label=text(r,notice,516,136,270,59,ink,small);lv_label_set_long_mode(status_label,LV_LABEL_LONG_WRAP);
     button("单步",516,203,130,[]{start_task(1);});button("运行 10 步",654,203,132,[]{start_task(10);},true);

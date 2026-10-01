@@ -1,4 +1,10 @@
-# CM4 validation
+# Validation records
+
+## 0.2.0 responsive source candidate
+
+See [RESPONSIVE-UI.md](RESPONSIVE-UI.md) for current host source rendering and input/layout checks. Native ARM64 compilation, the production GTK header and actual CM4 touch/fullscreen behavior remain pending in this environment. The records below apply to the previously built 0.1.0 release.
+
+## 0.1.0 CM4 validation
 
 Target: official Raspberry Pi OS Trixie, AArch64, CM4. Builds ran in a task-owned user cache with at most two compilation jobs. No package was installed, no production app/service was stopped, and no physical display, camera, audio device or USB configuration was changed.
 
@@ -10,7 +16,7 @@ Target: official Raspberry Pi OS Trixie, AArch64, CM4. Builds ran in a task-owne
 - Processing: four actual QuickJS examples ×180 frames, timeout recovery, heap limit, clipping and raster colors. Peak test RSS approximately 5 MiB for the model runner; this is not the GTK app or whole-system memory requirement.
 - StreamPlayer: fresh XDG tree, actual loopback HTTP authentication fixture, `0600` configuration publication, reload and password exclusion. The fixture uses synthetic credentials; no media-server account was accessed.
 - Mail: 13 synthetic protocol/UI tests covering bounded DNS/connect/TLS/SMTP/POP transactions, cancellation, malformed/oversize input, verified TLS and retry. Actual GTK Escape closes a stalled loopback socket while the UI remains responsive; see [network execution details](mail-network.md). No real account or email delivery was accessed.
-- Escape routing: production GTK physical-key and toolbar signals exercise Processing run/editor return/save and Airtune/StreamPlayer busy cancellation, late-success suppression, drain-before-retry and cancellation of an actual stalled loopback HTTP request.
+- Escape routing: production GTK physical-key and toolbar signals (the 0.2.0 regression targets the compact header Back button) exercise Processing run/editor return/save and Airtune/StreamPlayer busy cancellation, late-success suppression, drain-before-retry and cancellation of an actual stalled loopback HTTP request.
 - Bilibili decoder: production desktop MPlayer/YUV/GTK path decoded 45 frames from a locally generated H.264 MP4. Audio was disabled. No external video/account was used for this check.
 - Piano: actual PCM synthesis→GStreamer conversion→48 kHz stereo silent sink. GUI keyboard is rendered from the production code. Audible output still needs a physical check.
 - Camera: all 96 crop/look/paper combinations and synthetic preview→capture→JPEG→album; low-storage/cancel/permissions/atomic-save checks. Camera screenshots explicitly show the synthetic test pattern.
