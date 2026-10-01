@@ -19,6 +19,7 @@
       "System"
     ],
     "desktopFile": "typix-terminal.desktop",
+    "icon": "typix-terminal",
     "runtime": {
       "kind": "native",
       "path": "/usr/bin/typix-terminal"
@@ -26,12 +27,12 @@
     "requiredPayload": [
       "/usr/bin/typix-terminal",
       "/usr/share/typix-terminal/shared/NotoSansSC-Regular.ttf",
-      "/usr/share/typix-terminal/terminal/assets/terminfo.src",
-      "/usr/share/typix-terminal/terminal/assets/inputrc",
-      "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-OFL.txt",
-      "/usr/share/typix-terminal/terminal/assets/shellrc",
       "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-Bold.ttf",
       "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-Regular.ttf",
+      "/usr/share/typix-terminal/terminal/assets/terminfo.src",
+      "/usr/share/typix-terminal/terminal/assets/shellrc",
+      "/usr/share/typix-terminal/terminal/assets/inputrc",
+      "/usr/share/typix-terminal/terminal/assets/JetBrainsMono-OFL.txt",
       "/usr/share/typix-terminal/terminal/assets/terminfo/63/c1max"
     ],
     "compatibility": {
@@ -48,14 +49,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-terminal_0.1.0-1_arm64.deb",
-    "sha256": "1e8ad980d8682cd206180ea7e94bbce1aba958753c84f636f30174732176f0fa"
+    "version": "0.2.0-1",
+    "file": "dist/typix-terminal_0.2.0-1_arm64.deb",
+    "sha256": "6a7fd10e0e552e547996aa955510a2818f60f62d18d568c3d8685d155055ca20"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/terminal.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "path": "docs/screenshots/terminal-0.2.0-arm64.png",
+      "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]
 }

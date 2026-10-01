@@ -41,6 +41,9 @@ DEFAULT_APPS = [name for name in APPS if name != 'camera']
 
 
 def screenshot_metadata(name, version):
+    native = f'docs/screenshots/{name}-0.2.0-arm64.png'
+    if name in NATIVE and version == '0.2.0-1' and (ROOT / native).is_file():
+        return [{'path': native, 'caption': '0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务'}]
     responsive = f'docs/screenshots/{name}-responsive-800x600.png'
     if name != 'camera' and (ROOT / responsive).is_file():
         return [{'path': responsive, 'caption': '本机源码 LVGL 内容渲染，800×600；未验证 CM4 GTK 窗口与实体触摸'}]
@@ -149,6 +152,8 @@ def build(name, args, codename):
                           'display': ['wayland', 'x11'], 'requiredFeatures': []}},
         'release': {'version': args.version, 'file': 'dist/' + filename, 'sha256': digest},
         'screenshots': screenshot_metadata(name, args.version)}
+    for screenshot in metadata['screenshots']:
+        copy(ROOT / screenshot['path'], root / screenshot['path'])
     write(root / 'app.json', json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
     write(root / 'README.md', f'# Typix {english}\n\n{summary}。\n\n完整 deb、原生界面、用户数据与软件包分离。构建源位于父级 C1Max suite；运行 `python3 tools/build_debs.py --repository OWNER/REPO --apps {name}` 构建该应用。软件包仅兼容官方 Raspberry Pi OS {codename} ARM64。\n\n见随包 PORT-STATUS.md 的具体支持范围和硬件限制。需要媒体服务/ROM/BIOS/USB 节点的功能不会因安装软件包而自动具备。截图来源与验证范围见 app.json，源码渲染和旧版本参考图不表示本次 CM4 实体硬件已验收。\n')
     return {'id': name, 'package': package, 'file': str((dist / filename).relative_to(ROOT)), 'sha256': digest, 'depends': depends, 'compatibleOS': 'raspios-' + codename}

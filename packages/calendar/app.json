@@ -19,6 +19,7 @@
       "Office"
     ],
     "desktopFile": "typix-calendar.desktop",
+    "icon": "typix-calendar",
     "runtime": {
       "kind": "native",
       "path": "/usr/bin/typix-calendar"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-calendar_0.1.0-1_arm64.deb",
-    "sha256": "cb8f2bc6054d21554ffc390fc9ef177fe31202a60a6666624b5a9e7d3a16b9ab"
+    "version": "0.2.0-1",
+    "file": "dist/typix-calendar_0.2.0-1_arm64.deb",
+    "sha256": "950a7768e551e192905b01af2d1447b8701a9add521364afc20cfec4df66bf60"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/calendar.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "path": "docs/screenshots/calendar-0.2.0-arm64.png",
+      "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]
 }

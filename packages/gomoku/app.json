@@ -19,6 +19,7 @@
       "Game"
     ],
     "desktopFile": "typix-gomoku.desktop",
+    "icon": "typix-gomoku",
     "runtime": {
       "kind": "native",
       "path": "/usr/bin/typix-gomoku"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-gomoku_0.1.0-1_arm64.deb",
-    "sha256": "ab1ef1ea12370489841fbfaa4988822585ae1caddc54434657815e746054acfe"
+    "version": "0.2.0-1",
+    "file": "dist/typix-gomoku_0.2.0-1_arm64.deb",
+    "sha256": "a32d559f56afc999d6b154c62c38e60fcccedbf16cd6df98a1e0ef70e82cbab8"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/gomoku.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "path": "docs/screenshots/gomoku-0.2.0-arm64.png",
+      "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]
 }

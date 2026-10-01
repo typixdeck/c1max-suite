@@ -19,6 +19,7 @@
       "AudioVideo"
     ],
     "desktopFile": "typix-streamplayer.desktop",
+    "icon": "typix-streamplayer",
     "runtime": {
       "kind": "native",
       "path": "/usr/bin/typix-streamplayer"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-streamplayer_0.1.0-1_arm64.deb",
-    "sha256": "dd611f134d465417d0102974a200ab61fb6378531eb7f4d334911a259588983e"
+    "version": "0.2.0-1",
+    "file": "dist/typix-streamplayer_0.2.0-1_arm64.deb",
+    "sha256": "d671da9e5ef01446e80216f2677036ea8c2868d6d0a9dd2cf4fc11b3fcf782c4"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/streamplayer.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "path": "docs/screenshots/streamplayer-0.2.0-arm64.png",
+      "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]
 }

@@ -19,6 +19,7 @@
       "Network"
     ],
     "desktopFile": "typix-mail.desktop",
+    "icon": "typix-mail",
     "runtime": {
       "kind": "native",
       "path": "/usr/bin/typix-mail"
@@ -41,14 +42,14 @@
     }
   },
   "release": {
-    "version": "0.1.0-1",
-    "file": "dist/typix-mail_0.1.0-1_arm64.deb",
-    "sha256": "6d1dd314a0812ebb429c24bb2495aa5ddd31741eb4c2a5f60c5c1bb15685f633"
+    "version": "0.2.0-1",
+    "file": "dist/typix-mail_0.2.0-1_arm64.deb",
+    "sha256": "92bfc888f7e06822de5b831a856ad7614371e812383a36bceb90e2b42c2198a3"
   },
   "screenshots": [
     {
-      "path": "docs/screenshots/mail.png",
-      "caption": "CM4 独立 800×600 测试会话中的实际界面"
+      "path": "docs/screenshots/mail-0.2.0-arm64.png",
+      "caption": "0.2.0 ARM64 deb 实际 GTK 界面，800×600，隔离 Trixie/Xvfb；未验证 CM4 实体触摸、音频及外部服务"
     }
   ]
 }

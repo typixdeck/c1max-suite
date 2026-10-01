@@ -2,8 +2,9 @@
 """Extract complete debs and render them on a task-owned Xvfb, never install.
 
 HOME/XDG directories are isolated, and processes are closed in finally.
-Screenshots are real CM4 GTK pixels; no physical camera/USB/audio claim.
+Screenshots are real Linux ARM64 GTK pixels; no physical camera/USB/audio claim.
 """
+import argparse
 import json
 import os
 from pathlib import Path
@@ -20,6 +21,15 @@ NATIVE = {'calculator','calendar','gomoku','terminal','processing','airtune','st
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--apps', nargs='+', help='Test only explicitly selected package IDs')
+    parser.add_argument('--suffix', default='', help='Screenshot filename suffix; retains historical screenshots')
+    args = parser.parse_args()
+    known = {path.parent.name for path in (ROOT / 'packages').glob('*/app.json')}
+    if args.apps and set(args.apps) - known:
+        parser.error('Unknown application ID')
+    if any(character not in '-.0123456789abcdefghijklmnopqrstuvwxyz' for character in args.suffix):
+        parser.error('Screenshot suffix must contain only lowercase letters, numbers, hyphens and dots')
     screenshots = ROOT / 'docs/screenshots'
     screenshots.mkdir(exist_ok=True)
     qa = ROOT / 'build/qa'
@@ -38,6 +48,8 @@ def main():
             Gdk.init([])
             for metadata_path in sorted((ROOT / 'packages').glob('*/app.json')):
                 name = metadata_path.parent.name
+                if args.apps and name not in args.apps:
+                    continue
                 meta = json.loads(metadata_path.read_text())
                 app = meta['application']
                 install = qa / ('install-' + name)
@@ -52,7 +64,7 @@ def main():
                     (state/'data/c1').mkdir(mode=0o700)
                     runtime = app['runtime']
                     argv = [str(install/runtime['path'].lstrip('/'))] if runtime['kind']=='native' else ['/usr/bin/python3', str(install/runtime['path'].lstrip('/')), '--ui-smoke-test']
-                    path=screenshots/(name+'.png')
+                    path=screenshots/(name+args.suffix+'.png')
                     if path.exists(): path.unlink()
                     own_capture=name not in NATIVE
                     if own_capture: env['C1MAX_UI_SCREENSHOT']=str(path)
@@ -81,7 +93,7 @@ def main():
                                 assert colors is None or len(colors)>32, (name,'blank screenshot')
                             export=metadata_path.parent/'docs/screenshots'
                             export.mkdir(parents=True,exist_ok=True)
-                            shutil.copy2(path,export/(name+'.png'))
+                            shutil.copy2(path,export/path.name)
                             result['screenshot']=True
                         finally:
                             if proc.poll() is None:

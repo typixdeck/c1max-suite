@@ -4,17 +4,17 @@ Ports of the complete 18-entry public C1Max catalog for official Raspberry Pi OS
 
 Ten applications preserve their original C++/LVGL application logic in compositor-managed GTK3 windows. Piano, Camera and HIDPilot use native GTK3 implementations. DOS and PS1 have real local-library/session frontends backed by the distribution DOSBox and Mednafen packages. No browser runtime, device snapshots, ROM, BIOS or account configuration is included.
 
-## Responsive UI candidate
+## Responsive UI 0.2.0
 
 The 0.2.0 source adapts application widgets to the available TypixDeck window, removes the common bottom key panel and retains a compact Back/menu header. Terminal resizes its actual PTY grid; image and video previews retain their aspect ratio. Camera is held at its existing 0.1.0 version.
 
-These are **host renders of the actual LVGL application source**, with offline fixture state and without the GTK header. They cover 800×600, 1024×768 and 1280×800 content viewports. They are not new CM4 runtime acceptance or screenshots of rebuilt ARM64 packages. See [checks and limits](docs/RESPONSIVE-UI.md).
+These screenshots show the **actual rebuilt 0.2.0 ARM64 debs**, extracted and launched in an isolated Debian Trixie ARM64 GTK/Xvfb environment at 800×600. Network access was disabled and user state was temporary. All ten native applications started, rendered and exited successfully. This is not physical CM4 touch, audio or external-service acceptance. Additional actual LVGL source renders cover 1024×768 and 1280×800 content viewports. See [checks and limits](docs/RESPONSIVE-UI.md).
 
-![Calculator: responsive source UI at 800×600](docs/screenshots/calculator-responsive-800x600.png)
+![Calculator: 0.2.0 ARM64 GTK UI at 800×600](docs/screenshots/calculator-0.2.0-arm64.png)
 
-![Calendar: responsive source UI at 800×600](docs/screenshots/calendar-responsive-800x600.png)
+![Calendar: 0.2.0 ARM64 GTK UI at 800×600](docs/screenshots/calendar-0.2.0-arm64.png)
 
-![Mail: responsive source UI with offline fixture at 800×600](docs/screenshots/mail-responsive-800x600.png)
+![Mail: 0.2.0 ARM64 GTK UI with no account configured](docs/screenshots/mail-0.2.0-arm64.png)
 
 ## Build
 
@@ -26,7 +26,15 @@ cmake --build build -j2
 python3 tools/build_debs.py --repository OWNER/REPOSITORY
 ```
 
-The build defaults to 0.2.0-1 for the 14 selected applications and excludes Camera. Rebuilding Camera requires explicit `--apps camera --version 0.1.0-1`; its source and existing package are unchanged. Native ARM64 candidate binaries still need a supported Pi OS build/runtime check before publication.
+The build defaults to 0.2.0-1 for the 14 selected applications and excludes Camera. Rebuilding Camera requires explicit `--apps camera --version 0.1.0-1`; its source and existing package are unchanged. The published native 0.2.0 packages were built with the isolated Trixie ARM64 recipe below; physical Pi OS runtime validation is still required for touch, sound and external services.
+
+```sh
+docker build --platform linux/arm64 -f tools/Dockerfile.trixie-arm64 -t typix-c1max-builder:trixie-arm64 .
+docker run --rm --platform linux/arm64 --network none -v "$PWD:/work" typix-c1max-builder:trixie-arm64 sh -c \
+  'cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j6 && python3 tools/build_debs.py --repository typixdeck/c1max-suite --apps calculator calendar gomoku terminal processing airtune streamplayer bilibili mail moonpilot'
+```
+
+Use a fresh native `build` directory when changing between host operating systems. The container installs its build dependencies inside the image only; it does not install or change a Raspberry Pi. See [ARM64 build and isolated GUI evidence](docs/RESPONSIVE-UI.md#arm64-package-validation).
 
 The architecture-independent Python apps can also be assembled on a development computer with an explicit deployment target, without changing or pretending to detect the host OS:
 
@@ -56,16 +64,16 @@ HID requires already-configured writable keyboard/mouse gadget nodes and correct
 
 | Application | Source / package descriptor | UI evidence |
 | --- | --- | --- |
-| 计算器 / Calculator | [packages/calculator](packages/calculator/app.json) | [0.2 source render](docs/screenshots/calculator-responsive-800x600.png) |
-| 日历 / Calendar | [packages/calendar](packages/calendar/app.json) | [0.2 source render](docs/screenshots/calendar-responsive-800x600.png) |
-| 五子棋 / Gomoku | [packages/gomoku](packages/gomoku/app.json) | [0.1 CM4 reference](docs/screenshots/gomoku.png) |
-| 终端 / Terminal | [packages/terminal](packages/terminal/app.json) | [0.1 CM4 reference](docs/screenshots/terminal.png) |
-| 创意绘图 / Processing 2D | [packages/processing](packages/processing/app.json) | [0.1 CM4 reference](docs/screenshots/processing.png) |
-| 网络电台 / Airtune | [packages/airtune](packages/airtune/app.json) | [0.1 CM4 reference](docs/screenshots/airtune.png) |
-| 流媒体 / StreamPlayer | [packages/streamplayer](packages/streamplayer/app.json) | [0.1 CM4 reference](docs/screenshots/streamplayer.png) |
-| 哔哩哔哩 / Bilibili | [packages/bilibili](packages/bilibili/app.json) | [0.1 CM4 reference](docs/screenshots/bilibili.png) |
-| 邮件 / Mail | [packages/mail](packages/mail/app.json) | [0.2 source render](docs/screenshots/mail-responsive-800x600.png) |
-| 远程桌面 AI / MoonPilot | [packages/moonpilot](packages/moonpilot/app.json) | [0.1 CM4 reference](docs/screenshots/moonpilot.png) |
+| 计算器 / Calculator | [packages/calculator](packages/calculator/app.json) | [0.2 ARM64 GTK](docs/screenshots/calculator-0.2.0-arm64.png) |
+| 日历 / Calendar | [packages/calendar](packages/calendar/app.json) | [0.2 ARM64 GTK](docs/screenshots/calendar-0.2.0-arm64.png) |
+| 五子棋 / Gomoku | [packages/gomoku](packages/gomoku/app.json) | [0.2 ARM64 GTK](docs/screenshots/gomoku-0.2.0-arm64.png) |
+| 终端 / Terminal | [packages/terminal](packages/terminal/app.json) | [0.2 ARM64 GTK](docs/screenshots/terminal-0.2.0-arm64.png) |
+| 创意绘图 / Processing 2D | [packages/processing](packages/processing/app.json) | [0.2 ARM64 GTK](docs/screenshots/processing-0.2.0-arm64.png) |
+| 网络电台 / Airtune | [packages/airtune](packages/airtune/app.json) | [0.2 ARM64 GTK](docs/screenshots/airtune-0.2.0-arm64.png) |
+| 流媒体 / StreamPlayer | [packages/streamplayer](packages/streamplayer/app.json) | [0.2 ARM64 GTK](docs/screenshots/streamplayer-0.2.0-arm64.png) |
+| 哔哩哔哩 / Bilibili | [packages/bilibili](packages/bilibili/app.json) | [0.2 ARM64 GTK](docs/screenshots/bilibili-0.2.0-arm64.png) |
+| 邮件 / Mail | [packages/mail](packages/mail/app.json) | [0.2 ARM64 GTK](docs/screenshots/mail-0.2.0-arm64.png) |
+| 远程桌面 AI / MoonPilot | [packages/moonpilot](packages/moonpilot/app.json) | [0.2 ARM64 GTK](docs/screenshots/moonpilot-0.2.0-arm64.png) |
 | 钢琴 / Piano | [packages/piano](packages/piano/app.json) | [0.1 CM4 reference](docs/screenshots/piano.png) |
 | 拍立得 / Camera | [packages/camera](packages/camera/app.json) | [0.1 CM4 reference](docs/screenshots/camera.png) |
 | USB 键鼠 / HIDPilot | [packages/hidpilot](packages/hidpilot/app.json) | [0.1 CM4 reference](docs/screenshots/hidpilot.png) |

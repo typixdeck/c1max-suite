@@ -1,0 +1,131 @@
+{
+  "sourceBaseCommit": "07b4ce82f93f7c4cecc4a83074baf8d244e1567b",
+  "buildEnvironment": "Debian Trixie ARM64 container; GTK 3.24.49; fresh CMake Release build",
+  "imageID": "sha256:648d415f30aaed6804ff75828b4aaa9e332cbce670cecc0d64e555793a1bc253",
+  "externalNetworkInTests": false,
+  "installedOnCM4": false,
+  "packages": [
+    {
+      "id": "calculator",
+      "metadata": "packages/calculator/app.json",
+      "file": "packages/calculator/dist/typix-calculator_0.2.0-1_arm64.deb",
+      "bytes": 7196360,
+      "sha256": "4e959436ffe58314c66b70f864788afd5bfdb3c450cdf55ea875c2c5f8c1f657",
+      "nativeELF_sha256": "30feb9103b57ad88336b0ac82f61ee8032270ae6f578e28792995f69dec3942f",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "calendar",
+      "metadata": "packages/calendar/app.json",
+      "file": "packages/calendar/dist/typix-calendar_0.2.0-1_arm64.deb",
+      "bytes": 7358606,
+      "sha256": "950a7768e551e192905b01af2d1447b8701a9add521364afc20cfec4df66bf60",
+      "nativeELF_sha256": "7275902818e5a611d47b083bcf2ac41f3d8d36061226dbc2139556714ad45625",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "gomoku",
+      "metadata": "packages/gomoku/app.json",
+      "file": "packages/gomoku/dist/typix-gomoku_0.2.0-1_arm64.deb",
+      "bytes": 7147688,
+      "sha256": "a32d559f56afc999d6b154c62c38e60fcccedbf16cd6df98a1e0ef70e82cbab8",
+      "nativeELF_sha256": "56e998c9ec879ec77bbf9c19b1744e32b2aa5e6ac3c03104297b22b34015c908",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "terminal",
+      "metadata": "packages/terminal/app.json",
+      "file": "packages/terminal/dist/typix-terminal_0.2.0-1_arm64.deb",
+      "bytes": 7625962,
+      "sha256": "6a7fd10e0e552e547996aa955510a2818f60f62d18d568c3d8685d155055ca20",
+      "nativeELF_sha256": "413a7f1bd9d48254fbe5e1c649b7976e248d24d78e3bf14e752baed7eceb1e14",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "processing",
+      "metadata": "packages/processing/app.json",
+      "file": "packages/processing/dist/typix-processing_0.2.0-1_arm64.deb",
+      "bytes": 7921606,
+      "sha256": "07adf5f0d88eda8c467de72cb81c5912bdc8ea1a9623f33005e8a169881d649f",
+      "nativeELF_sha256": "a69c99f0667e3c40ec71059b62cef60e1cd0a361a340dceccf7a20d0a96a670e",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "airtune",
+      "metadata": "packages/airtune/app.json",
+      "file": "packages/airtune/dist/typix-airtune_0.2.0-1_arm64.deb",
+      "bytes": 8005796,
+      "sha256": "b007cb94d086fcbce89073c3f84a0b58d8ba775bd1c1c19fd3208de993fa07e0",
+      "nativeELF_sha256": "0ccebbf22760345ac0b0ba3e4d33398cd38bddf5c624b06eb57d9137dfa32ab9",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "streamplayer",
+      "metadata": "packages/streamplayer/app.json",
+      "file": "packages/streamplayer/dist/typix-streamplayer_0.2.0-1_arm64.deb",
+      "bytes": 7534192,
+      "sha256": "d671da9e5ef01446e80216f2677036ea8c2868d6d0a9dd2cf4fc11b3fcf782c4",
+      "nativeELF_sha256": "a6f81a669dbafafaad130c46f3762901f3af7297f0b842262fbef3c899b58c4d",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "bilibili",
+      "metadata": "packages/bilibili/app.json",
+      "file": "packages/bilibili/dist/typix-bilibili_0.2.0-1_arm64.deb",
+      "bytes": 7356228,
+      "sha256": "7da5649e1f858dee8f4bd07dcf6d1f8bae7733bef7be7aae3025c967675f6cde",
+      "nativeELF_sha256": "e913ef8fca35fae79aac03181a4b07deb4cb56a202773032d7ba291191d9e658",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "mail",
+      "metadata": "packages/mail/app.json",
+      "file": "packages/mail/dist/typix-mail_0.2.0-1_arm64.deb",
+      "bytes": 8358432,
+      "sha256": "92bfc888f7e06822de5b831a856ad7614371e812383a36bceb90e2b42c2198a3",
+      "nativeELF_sha256": "c7a363537cffd7b0418a26726458d6fb107805aaee69371cc1575c1d452dd6d4",
+      "sameELFAsGUIExercise": true
+    },
+    {
+      "id": "moonpilot",
+      "metadata": "packages/moonpilot/app.json",
+      "file": "packages/moonpilot/dist/typix-moonpilot_0.2.0-1_arm64.deb",
+      "bytes": 7883606,
+      "sha256": "e6e736820e03e675596f8a71b721a5efe3fc6111d9560ac231234bc1195bfd9d",
+      "nativeELF_sha256": "611bf441cc9a489cc06ef0cc1469b49ea5bc57582b151d193a8fc740d0a519c4",
+      "sameELFAsGUIExercise": true
+    }
+  ],
+  "unchangedCamera_sha256": "4c18841269bbceb8462712190f01227e5c2ad900ef47cbe5975e2396a9758a2d",
+  "debianBaseImage": "debian:trixie-slim@sha256:3a39a0592364683e6bab97937b72cad5a8fa6dcbbee90edb3bb48c7f8e94f258",
+  "tools": {
+    "compiler": "c++ (Debian 14.2.0-19) 14.2.0",
+    "strip": "GNU Binutils 2.44 --strip-unneeded",
+    "cmake": "3.31.6",
+    "gtk": "3.24.49",
+    "dpkgDeb": "1.22.22 arm64"
+  },
+  "configureCommand": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release",
+  "buildCommand": "cmake --build build -j6",
+  "nativeCompileFlags": "-O3 -DNDEBUG -std=gnu++17 -pthread",
+  "completePayloadValidation": {
+    "packages": 15,
+    "result": "passed",
+    "sha256ControlIdentityResources": "passed"
+  },
+  "dependencySimulation": {
+    "packages": 15,
+    "command": "apt-get -s install <15 absolute deb paths>",
+    "distribution": "Debian Trixie ARM64",
+    "exitCode": 0,
+    "installed": false
+  },
+  "tests": [
+    "Ten final stripped ELF payloads byte-identical to extracted debs exercised by GTK/Xvfb",
+    "Ten native app startup/render/exit 0 in task-owned Xvfb, external network disabled",
+    "Production GTK Escape/header Back routing: Processing, Airtune, StreamPlayer",
+    "HTTP cancel, discard late result, wait/drain and retry recovery via stalled loopback fixture",
+    "StreamPlayer first-run private state, reload and password exclusion",
+    "QuickJS execution, timeout recovery, memory limits and raster checks"
+  ]
+}
