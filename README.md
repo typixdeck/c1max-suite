@@ -4,6 +4,14 @@ Ports of the complete 18-entry public C1Max catalog for official Raspberry Pi OS
 
 Ten applications preserve their original C++/LVGL application logic in compositor-managed GTK3 windows. Piano, Camera and HIDPilot use native GTK3 implementations. DOS and PS1 have real local-library/session frontends backed by the distribution DOSBox and Mednafen packages. No browser runtime, device snapshots, ROM, BIOS or account configuration is included.
 
+## Bilibili 0.2.1 transport correction
+
+Bilibili 0.2.1 passes its required Referer and User-Agent to MPlayer's HTTPS
+transport, fixing the missing-header 403 defect. TLS certificate verification
+uses the system CA bundle. Login credentials are still kept away from video
+CDNs. Other applications remain at their existing versions. See
+[transport checks and limits](docs/BILIBILI-0.2.1.md).
+
 ## Responsive UI 0.2.0
 
 The 0.2.0 source adapts application widgets to the available TypixDeck window, removes the common bottom key panel and retains a compact Back/menu header. Terminal resizes its actual PTY grid; image and video previews retain their aspect ratio. Camera is held at its existing 0.1.0 version.

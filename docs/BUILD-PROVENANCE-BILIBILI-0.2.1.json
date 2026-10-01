@@ -1,0 +1,44 @@
+{
+  "architecture": "ARM64",
+  "version": "0.2.1-1",
+  "debBytes": 7356390,
+  "debSha256": "7a93b1b1470796bdd4e2c728a2bc97fe11e809d8cf1b031a0672b594af883f6f",
+  "packagedELFsha256": "f9924983dc48ed56434736207e89fdced38758b822c50ed2823d528f9baa1c85",
+  "depends": "libc6 (>= 2.38), libcairo2 (>= 1.2.4), libgcc-s1 (>= 3.0), libglib2.0-0t64 (>= 2.12.0), libgtk-3-0t64 (>= 3.21.5), libstdc++6 (>= 14), mplayer, wget, ca-certificates, wireplumber",
+  "isolatedGtkStartupExitCode": 0,
+  "networkAvailable": false,
+  "physicalDeviceVerified": false,
+  "sourceBaseCommit": "97782559573054a0379e32f3035b08dbca68695b",
+  "buildEnvironment": "Debian Trixie ARM64 container; existing CMake Release build, Bilibili target rebuilt",
+  "imageID": "sha256:648d415f30aaed6804ff75828b4aaa9e332cbce670cecc0d64e555793a1bc253",
+  "buildCommand": "cmake --build build --target c1max-bilibili -j4",
+  "packageCommand": "python3 tools/build_debs.py --repository typixdeck/c1max-suite --apps bilibili --version 0.2.1-1",
+  "nativeCompileFlags": "-O3 -DNDEBUG -std=gnu++17 -pthread",
+  "tools": {
+    "compiler": "c++ (Debian 14.2.0-19) 14.2.0",
+    "strip": "GNU Binutils 2.44 --strip-unneeded",
+    "cmake": "3.31.6",
+    "gtk": "3.24.49",
+    "dpkgDeb": "1.22.22 arm64"
+  },
+  "sourceFileSha256": {
+    "upstream/bilibili/src/player.cpp": "cf3e0336c46e9dfc8f465bca0e6d7096efc4e55bfdf047f67474ea33294fdc2e",
+    "upstream/bilibili/src/api.cpp": "5801fc9ac1ba7a5953ecf928567f4f2eb01969096899b9b11b32d68f36a10e1c",
+    "upstream/bilibili/src/main.cpp": "181789f73c31d4b15ac96d22d2a037e9a406697a88f224e700340bf756c0a1f0",
+    "upstream/shared/net.cpp": "b17efe2f87f7cddaff8a11f7738e9d1953697b1e48fcb3cde88ed5f6462193dc",
+    "port/display.cpp": "53d55a1069d01c3c93fbe5ea1aea0b8c960dcf78f0f39508cd27f05612c0a61a",
+    "port/layout.cpp": "5f91e9a0da4e1be68d8b4a6c9cdfcc27363f327621181098e9cf1f0303484bba"
+  },
+  "unstrippedBuildELFsha256": "a31aa7c9b1218b5b880f72ef07670c0d0d13bf4a38f10ffb4685d4410df8f050",
+  "metadata": "packages/bilibili/app.json",
+  "debFile": "packages/bilibili/dist/typix-bilibili_0.2.1-1_arm64.deb",
+  "transportFixture": {
+    "mplayer": "2:1.5+svn38674-2",
+    "casesPassed": 6,
+    "actualProductionPlayerAndY4M": true,
+    "externalNetwork": false
+  },
+  "liveCdnVerified": false,
+  "otherApplicationFilesUnchanged": 2357,
+  "screenshot": "Retained labelled 0.2.0 ARM64 GTK screenshot; 0.2.1 changes only HTTPS transport"
+}

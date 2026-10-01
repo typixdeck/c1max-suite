@@ -30,7 +30,7 @@ void Player::start(const Stream&s){
     const char*silent=getenv("C1_BILI_SILENT");
     // Stock MPlayer routes HTTPS through libavformat, where -referrer and
     // -user-agent are not forwarded. Configure both HTTP transport paths.
-    std::vector<std::string> args={"mplayer","-noconfig","all","-slave","-quiet","-identify","-noconsolecontrols","-nolirc","-nojoystick","-nomouseinput","-nosub","-noautosub","-osdlevel","0","-cache","512","-cache-min","10","-framedrop","-vo","yuv4mpeg:file="+fifo_,"-ao",silent&&std::string(silent)=="1"?"null":"pulse,alsa","-user-agent","Mozilla/5.0","-referrer","https://www.bilibili.com/","-vf","scale=512:288,format=yv12",playback_url};
+    std::vector<std::string> args={"mplayer","-noconfig","all","-slave","-quiet","-identify","-noconsolecontrols","-nolirc","-nojoystick","-nomouseinput","-nosub","-noautosub","-osdlevel","0","-cache","512","-cache-min","10","-framedrop","-vo","yuv4mpeg:file="+fifo_,"-ao",silent&&std::string(silent)=="1"?"null":"pulse,alsa","-user-agent","Mozilla/5.0","-referrer","https://www.bilibili.com/","-lavfstreamopts","user_agent=Mozilla/5.0,referer=https://www.bilibili.com/,tls_verify=1,ca_file=/etc/ssl/certs/ca-certificates.crt","-vf","scale=512:288,format=yv12",playback_url};
     std::vector<char*>av;for(auto&a:args)av.push_back(a.data());av.push_back(nullptr);
     if(!screen::video_begin()){for(int fd:{in[0],in[1],out[0],out[1]})close(fd);stop();throw std::runtime_error("无法准备视频显示");}
     pid_t parent=getpid();pid_=fork();
